@@ -12,6 +12,9 @@
 .fontColorH3{
   color: #FFB432
 }
+.fontColorH4{
+  color: #2E86C1
+}
 .fontFace {
   font-weight: Bold;
   font-style: Italic;
@@ -20,13 +23,28 @@
 
 [TOC]
 
-# dCloud: MPLS Segment Routing Introduction v2
+# Why We Need Segment Routing
 
-## <span class="fontColorH2">Overall Topology</span>
+## <span class="fontColorH2"> Segment Routing Simplifies The Control Plane</span> 
+
+Intrinsically, Segment Routing (SR) could be treated as NG-MPLS. As the matter of fact, it really is. The main drivers for embracing SR instead of traditional MPLS (LDP/RSVP) are summarized below.
+
+- <span class="fontColor">The optimization of the signaling. It is carried out by decoupling additional protocols.</span>
+- ECMP supported. It is one of main shortages of RSVP.
+- Easily distinguish the traffic is being stuck on which node from the troubleshooting aspect.
+
+The reason why SR optimizes the signaling is becauase none of the signaling protocol is required to make SR function, the IGP (OSPF/ISIS) extentions take it over instead. Therefore, RSVP is not required at all for fulfilling MPLS TE in the SR domain.
+
+## <span class="fontColorH2">What Does Segment Routing Differ Traditional LDP</span>
+One of the significant differences in between is label allocation. By default, LDP allocates the label for both the node itself (loopback) and every link of that node. If TE has not been considered for the entire IP/MPLS transport then the link labels are not required at all. That is because ECMP is a native behavior of SR. <span class="fontColor">Unlike LDP, SR allocates the label for the node only by default.</span> The node and the link labels in the SR domain are called Prefix SID (segment identifier) and Adjacency SID (segment identifier) respectively.
+
+## <span class="fontColorH2">dCloud: MPLS Segment Routing Introduction v2</span>
+
+### <span class="fontColorH3">Overall Topology</span>
 
 ![Overall Topology](https://i.imgur.com/MKXe8uC.png)
 
-## <span class="fontColorH2">SR Configuration</span>
+### <span class="fontColorH3">SR Configuration</span>
 Both the demo platform and the routing protocol are IOS-XRv and OSPF. Other than how to deploy the basic SR domain, the thing needs to be kept in mind in this section is that <span class="fontColor">when LDP and SR both are presenting LSP, LSP is preferred over LDP by default (as the label #2400x shown in the 1st block)</span>. The design purpose is to ensure when the MPLS backbone migrates to SR from LDP as seamless as possible. Therefore, the behavior of LDP-preferable is able to be overridden (as the label #1600x shown in the 2nd block).
 
 ```
@@ -53,7 +71,7 @@ Tracing the route to 10.10.6.6
  3  172.16.6.6 9 msec  *  19 msec 
 ```
 
-## <span class="fontColorH2">LDP Configuration Removal
+### <span class="fontColorH3">LDP Configuration Removal
 </span>
 
 Continue with the previous section. The most ideal way to seamlessly migrate traditional MPLS backbone from LDP to SR is...
@@ -62,7 +80,7 @@ Continue with the previous section. The most ideal way to seamlessly migrate tra
 - Override the forwarding path via SR. Both LDP and SR are still coexistent in this stage.
 - Decommission LDP.
 
-## <span class="fontColorH2">SRTE Configuration</span>
+### <span class="fontColorH3">SRTE Configuration</span>
 
 As presented by [Why We Need Segment Routing](https://hackmd.io/@terrencec51229/why-we-need-segment-routing) *(When Do We Need The Adjacency SID)*. There are two scenarios of TE in SR, per Prefix (node) level, and per Adjacency (link) level. No matter which one, one of the significant differences was presented in this section, <span class="fontColor">the TE tunnel does not need to be a pair in the SR domain, the one-way tunnel could function well.</span> That is why XR6 (the receiver) did not deploy any tunnels that point toward XR1 (the initiator).
 
@@ -113,7 +131,7 @@ Tracing the route to 10.10.6.6
 
 ![ECMP Supported](https://i.imgur.com/926BfoX.png)
 
-## <span class="fontColorH2">SR TI-LFA Protection</span>
+### <span class="fontColorH3">SR TI-LFA Protection</span>
 
 Intrinsically, there is nothing different between LDP and SR from the LFA aspect.
 
@@ -189,9 +207,9 @@ Label  Label       or ID              Interface                    Switched
   Traffic-Matrix Packets/Bytes Switched: 0/0
 ```
 
-## <span class=fontColorH2>Appendix</span>
+### <span class=fontColorH3>Appendix</span>
 
-### <span class=fontColorH3>Segment Routing Global Block</span>
+#### <span class=fontColorH4>Segment Routing Global Block</span>
 
 The default range of SRGB is from 16,000 through 23,999 (8,000 labels could be allocated in total). However, IOS-XR adopts different hierarchy allocation model for both IGP and BGP. As for IGP, the following behaviors are in sequence.
 
@@ -201,6 +219,10 @@ The default range of SRGB is from 16,000 through 23,999 (8,000 labels could be a
 
 Unlike IGP, BGP supports the global-level setup only and there is no default range as well.
 
-## <span class="fontColorH2">References</span>
+### <span class="fontColorH2">References</span>
 
-> [dCloud: MPLS Segment Routing Introduction v2 (CCO required)](https://dcloud2-sng.cisco.com/content/demo/298383?returnPathTitleKey=history-view)
+> [Podcast: Network Collective - Introduction To Segment Routing](https://networkcollective.com/2019/03/ep47-intro-to-segment-routing/)
+
+> [YouTube: iNE - Introduction to Segment Routing](https://www.youtube.com/playlist?list=PLCnmCTMRj5GwQGxXizASzwCfq7jFI2sCM)
+
+> [YouTube: Juniper - Segment Routing (SR)](https://www.youtube.com/playlist?list=PLGvolzhkU_gQcpye7Xr5SzM_yYgGPZA0t)
