@@ -42,6 +42,12 @@ Intrinsically, DirectMemory is for the caching purpose so that it does not prote
 
 ## <span class="fontColorH2">Cloud Block Store</span>
 
+### <span class="fontColorH3">Architecture</span>
+
+The controllers are launched on c5n.9xlarge (10GbE) by default and it is able to upgrade to c5n.18xlarge (25GbE) if needed. Currently, those two are the only available instance types. The vShelfs (virtual drives) are launched on i3.2xlarge (1.9TB NVMe) by default. Refer to [Cloud Block Store Support Matrix](https://support.purestorage.com/FlashArray/PurityFA/Cloud_Block_Store/Cloud_Block_Store_Support_Matrix) for more details.
+
+![CBS Architecture](https://i.imgur.com/VyYjLdZ.png)
+
 Although both FlashArray and Cloud Block Store (CBS) adopt the same software and architecture design, however, from the overall performance perspective, CBS meets about 70% level of FlashArrary.
 
 Based on current design, the vShelf cannot be NDU (non-disruptive upgrade). Each controller's specification (c5n.9xlarge/18xlarge) has its own vShelf instance-type and they cannot mix.
@@ -49,4 +55,21 @@ Based on current design, the vShelf cannot be NDU (non-disruptive upgrade). Each
 - When the controller is c5n.9xlarge then its vShelf would be 1x i3.2xlarge (1x 1.9 NVMe SSD).
 - When the controller is c5n.18xlarge then its vShelf would be 4x i3.8xlarge (4x 1.9 NVMe SSD).
 
-Refer to [Cloud Block Store Architecture](https://hackmd.io/@terrencec51229/cloud-block-store-architecture) for more details.
+### <span class="fontColorH3">Procurement and Deployment</span>
+
+The primary difference between Pure-As-a-Service and AWS Marketplace has three...
+
+- Pure-As-a-Service is a compound package that composes of on-premises/cloud arrays.
+- The contract of Pure-As-a-Service is directly signed to Pure.
+- Pure-As-a-Service has not released for the Asia market yet.
+
+![Procurement Options](https://i.imgur.com/ZCexF1Y.png)
+
+### <span class="fontColorH3">Supported Regions</span>
+
+![Supported Regions](https://i.imgur.com/8XcfIUB.png =x500)
+
+## <span class="fontColorH2">References</span>
+> [YouTube: TFD - Pure Storage Cloud Block Store Architecture](https://www.youtube.com/watch?v=5RBv-EG-NC4)
+
+> [YouTube: TFD - Pure Storage Cloud Block Store Procurement Deployment, Manageability](https://www.youtube.com/watch?v=lL3ec0slyeo)
