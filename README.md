@@ -71,7 +71,7 @@ There are three kinds of TGW Attachments for bridging the resources with TGW.
 2. ++VPN++ - Establish the IPSec VPN tunnels or the BGP adjacency over those tunnels with TGW. It could be used for either pure AWS or external environments. However, there is one thing needs to keep in mind, its capacity. <span class="fontColor">Each VPC/Peering Attachment has 50 Gbps capacity, but each VPN tunnel can only afford up to 1.25 Gbps volume of the traffic.</span> 
 3. ++Peering++ - Establish the BGP adjacency with TGW which locates in different region. It is used for pure AWS environment only.
 
-It could be implemented via `VPC > Transit Gateways` and it is available globally in most of commercial regions.
+All of them which bind with the same TGW form an TGW Route Table. What does it differ from VPC Route Table? That is TGW Route Table acts as an BGP table which involves all the feasible routes. However, it does not account for the actual routing of VPC, it is responsible for VPC Route Table instead. All the above-mentioned features could be implemented via `VPC > Transit Gateways` and they are available globally in most of commercial regions.
 
 ![Overview](https://i.imgur.com/IgTsPf3.png)
 
