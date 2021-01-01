@@ -19,59 +19,26 @@
 
 [TOC]
 
-# Pure Accelerate 2019 Re-cap
-The following outlines do not cover ALL the events. I was capturing some of the them that were worth to be kept in mind instead. 
+# About Myself
 
-## <span class="fontColorH2">FlashArray</span>
+## <span class="fontColorH2">Find Your Greatness and Keep Your Faith</span>
 
-### <span class="fontColorH3">DirectMemory</span>
-The main functionality of DirectMemory is to accelerate the READ performance. Based on current design of FlashArray, both <span class="fontColor">X70</span> and <span class="fontColor">X90</span> are the only supported models.
+This slogan is excerpted by [Nike](https://www.youtube.com/watch?v=WYP9AGtLvRg) and I just want to remind myself whenever I look at it. We are not only just to find out what are we good at, but also have to keep growing up continuously although slowly.
 
-Intrinsically, DirectMemory is for the caching purpose so that it does not protect by RAID. If one of the DirectMemory caches malfunctions during reading, it would affect the performance only (higher latency than usual).
+We have been involved in the new era of mixed territories, such as networking, security, storage, and virtualization. They are not standalone anymore, closed to each other instead. Therefore, my goal is not only to keep what I have been familiar with, but also to learn what is news, and evaluate if it is worth to try to optimize the existing environment or resolve the known issues. To be not just a Networking!
 
-### <span class="fontColorH3">Others</span>
-- FlashArray supports NVMe-oF and it requires an additional 25/50Gb NIC module (MPO connector).
-- SNAP2NFS supports NFSv3 now.
-- FlashArray supports both the X-X/X-C replications.
-  - For X-series to X-series: <span class="fontColor">1 X-platform is able to afford up to 32 replications.</span> For instance, one X90 platform could afford up to 32x X20 platform replications.
-  - For X-series to C-series: <span class="fontColor">1 C-platform is able to afford up to 8 replications.</span> For instance, one C60 platform could afford up to 8x X20 platform replications.
+## <span class="fontColorH2">The Driver of Write-down</span>
 
-## <span class="fontColorH2">Cloud Block Store</span>
+As of today, I have been benefited from several useful blogs such as [Nicholas Russo](http://njrusmc.net/), [Cody Hosterman](https://www.codyhosterman.com/), and even any contents could be found by Google. I have had an idea to push my notes to be readable since a long time ago, therefore, I might be able to assist someone in the future as well as those guys. The progress is not so fast, but I will fill this place as my best as possible.
 
-### <span class="fontColorH3">Architecture</span>
+Intrinsically, all of my posts would much focus on Networking and Cloud spaces.
 
-The controllers are launched on c5n.9xlarge (10GbE) by default and it is able to upgrade to c5n.18xlarge (25GbE) if needed. Currently, those two are the only available instance types. The vShelfs (virtual drives) are launched on i3.2xlarge (1.9TB NVMe) by default. Refer to [Cloud Block Store Support Matrix](https://support.purestorage.com/FlashArray/PurityFA/Cloud_Block_Store/Cloud_Block_Store_Support_Matrix) for more details.
+## <span class="fontColorH2">Reference</span>
 
-![CBS Architecture](https://i.imgur.com/VyYjLdZ.png)
-
-Although both FlashArray and Cloud Block Store (CBS) adopt the same software and architecture design, however, from the overall performance perspective, CBS meets about 70% level of FlashArrary.
-
-Based on current design, the vShelf cannot be NDU (non-disruptive upgrade). Each controller's specification (c5n.9xlarge/18xlarge) has its own vShelf instance-type and they cannot mix.
-
-- When the controller is c5n.9xlarge then its vShelf would be 1x i3.2xlarge (1x 1.9 NVMe SSD).
-- When the controller is c5n.18xlarge then its vShelf would be 4x i3.8xlarge (4x 1.9 NVMe SSD).
-
-### <span class="fontColorH3">Procurement and Deployment</span>
-
-The primary difference between Pure-As-a-Service and AWS Marketplace has three...
-
-- Pure-As-a-Service is a compound package that composes of on-premises/cloud arrays.
-- The contract of Pure-As-a-Service is directly signed to Pure.
-- Pure-As-a-Service has not released for the Asia market yet.
-
-![Procurement Options](https://i.imgur.com/ZCexF1Y.png)
-
-### <span class="fontColorH3">Supported Regions</span>
-
-![Supported Regions](https://i.imgur.com/8XcfIUB.png =x500)
-
-## <span class="fontColorH2">References</span>
-> [YouTube: TFD - Pure Storage Cloud Block Store Architecture](https://www.youtube.com/watch?v=5RBv-EG-NC4)
-
-> [YouTube: TFD - Pure Storage Cloud Block Store Procurement Deployment, Manageability](https://www.youtube.com/watch?v=lL3ec0slyeo)
+[LinkedIn](https://www.linkedin.com/in/terrencec51229/)
 
 :::info
-###### tags: `PureStorage` `PureAccelerate` `CBS`
+###### tags: `Index`
 :::
 
 {%hackmd BJrTq20hE %}
