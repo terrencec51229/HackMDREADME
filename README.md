@@ -17,10 +17,9 @@
 }
 </style>
 
-[TOC]
-
-
 # The Evolution of Cloud Networking on AWS
+
+[TOC]
 
 ## <span class="fontColorH2">Native Cloud</span>
 
@@ -42,7 +41,7 @@ Other than the prefixes between VPCs cannot overlap, the most importantly, <span
 
 ![three-vpcs-peered-diagram](https://i.imgur.com/UzdxSwD.png)
 
-> Visit [What is VPC peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) for more details.
+> :mag: Visit [What is VPC peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) for more details.
 
 ### <span class="fontColorH3">Transit VPC </span>
 
@@ -52,7 +51,7 @@ In effect, <span class="fontColor">Transit VPC is a concept instead of a package
 
 ![Transit VPC](https://i.imgur.com/Q4nW6ji.png)
 
-> Because it is a concept so that it could be fulfilled by the 3^rd^ party solutions. Essentially, you could adopt any of the on-premises solutions that you have been familiar with if they are able to launch on AWS. Visit [Transit VPC Solutions in AWS Marketplace](https://aws.amazon.com/marketplace/solutions/infrastructure-software/transit-VPC) for more details.
+>  :mag: Because it is a concept so that it could be fulfilled by the 3^rd^ party solutions. Essentially, you could adopt any of the on-premises solutions that you have been familiar with if they are able to launch on AWS. Visit [Transit VPC Solutions in AWS Marketplace](https://aws.amazon.com/marketplace/solutions/infrastructure-software/transit-VPC) for more details.
 
 ### <span class="fontColorH3">Transit Gateway</span>
 
@@ -75,7 +74,7 @@ There is one more methodology could more efficiently utilize/concentrate TGW and
 
 ![Shared Resources](https://i.imgur.com/M9CiQ5R.jpg)
 
-> Visit [Performance and limits](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is a transit gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) for more in-depth details.
+>  :mag: Visit [Performance and limits](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is a transit gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) for more in-depth details.
 
 ### <span class="fontColorH3">Comparison of The Transit Family </span>
 
@@ -91,7 +90,7 @@ Direct Connect is just a medium, it cannot function by itself so that it relies 
 
 Most of well-known ISPs have offered CloudConnect-as-a-service already, such as [PCCW](https://www.consoleconnect.com/clouds/connect-to-amazon-web-services/), [GCX](https://www.globalcloudxchange.com/about-2/cloud-networking/cloud-x-fusion/), and [Megaport](https://www.megaport.com/services/amazon-web-services/). One thing in common in between is they offer all-in-one circuit which is able to link up multiple CSPs together by leveraging their MPLS-VPN transport backbone. Another benefit is their locations of Customer Edge (CE) are much more spreaded than AWS provided.
 
-> Visit [Technical](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html) for more in-depth details.
+> :mag: Visit [Technical](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html) for more in-depth details.
 
 ### <span class="fontColorH3">Virtual Private Gateway</span>
 
