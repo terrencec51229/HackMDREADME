@@ -21,7 +21,7 @@
 
 [TOC]
 
-## <span class="fontColorH2"> Segment Routing Simplifies The Control Plane</span> 
+## <span class="fontColorH2"> The Control Plane Simplification</span> 
 
 Intrinsically, Segment Routing (SR) could be treated as NG-MPLS. As the matter of fact, it really is. The main drivers for embracing SR instead of traditional MPLS (LDP/RSVP) are summarized below.
 
@@ -31,7 +31,7 @@ Intrinsically, Segment Routing (SR) could be treated as NG-MPLS. As the matter o
 
 The reason why SR optimizes the signaling is becauase none of the signaling protocol is required to make SR function, the IGP (OSPF/ISIS) extentions take it over instead. Therefore, RSVP is not required at all for fulfilling MPLS TE in the SR domain.
 
-## <span class="fontColorH2">What Does Segment Routing Differ Traditional LDP</span>
+### <span class="fontColorH3">What Does Segment Routing Differ Traditional LDP</span>
 One of the significant differences in between is label allocation. By default, LDP allocates the label for both the node itself (loopback) and every link of that node. If TE has not been considered for the entire IP/MPLS transport then the link labels are not required at all. That is because ECMP is a native behavior of SR. <span class="fontColor">Unlike LDP, SR allocates the label for the node only by default.</span> The node and the link labels in the SR domain are called Prefix SID (segment identifier) and Adjacency SID (segment identifier) respectively.
 
 ## <span class="fontColorH2">dCloud: MPLS Segment Routing Introduction v2</span>
