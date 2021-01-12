@@ -287,7 +287,7 @@ Unlike IGP, BGP supports the global-level setup only and there is no default ran
 > [YouTube: Juniper - Segment Routing (SR)](https://www.youtube.com/playlist?list=PLGvolzhkU_gQcpye7Xr5SzM_yYgGPZA0t)
 
 :::info
-###### tags: `ServiceProvider` `MPLS` `SR` `dCloud`
+###### tags: `Cisco` `dCloud` `SPN` `MPLS` `SR`
 :::
 
 {%hackmd BJrTq20hE %}
