@@ -135,13 +135,13 @@ Here is how it functions in detail once the initialization is complete.
 
 The following table primarily summarizes what they differ each other.
 
-| Item                    | SMS                                   | 3^rd^ Party                                | CloudEndure                                |
-| ----------------------- | ------------------------------------- | ------------------------------------------ | ------------------------------------------ |
-| Dependency of VM Import | Yes                                   | Partial (validation)                       | <span class="fontColor">No</span>        |
-| Output(s)               | AMI/EBS Snapshot(s)                   | AMI/EBS Snapshot(s)                        | EBS Snapshot(s)                            |
-| Integration of vCenter  | Yes (go cloud)                        | Yes (go cloud)                             | Yes (fallback)                             |
-| Fallback of on-premises | Not supported                         | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span> |
-| Cost of service itself  | <span class="fontColor">Free</span> | Not free                                   | Expensive (license)                        |
+| Item                    | SMS                                 | 3^rd^ Party                              | CloudEndure                                                                                                                                                            |
+| ----------------------- | ----------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency of VM Import | Yes                                 | Partial (validation)                     | <span class="fontColor">No</span>                                                                                                                                      |
+| Output(s)               | AMI/EBS Snapshot(s)                 | AMI/EBS Snapshot(s)                      | EBS Snapshot(s)                                                                                                                                                        |
+| Integration of vCenter  | Yes (go cloud)                      | Yes (go cloud)                           | Yes (fallback)                                                                                                                                                         |
+| Fallback of on-premises | Not supported                       | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span>                                                                                                                               |
+| Cost of service itself  | <span class="fontColor">Free</span> | Charged                                  | [Conditional free (Migration)](https://aws.amazon.com/cloudendure-migration/pricing/) or [Charged (DR)](https://aws.amazon.com/cloudendure-disaster-recovery/pricing/) |
 
 ## <span class="fontColorH2">Conversion-independent</span> 
 
@@ -190,15 +190,15 @@ Other than those cloud-native restrictions, there is nothing different with the 
 
 The following table primarily summarizes what VMConAWS differs those conversion-based solutions.
 
-| Item                    | SMS                                 | 3^rd^ Party                              | CloudEndure                              | VMConAWS                                    |
-| ----------------------- | ----------------------------------- | ---------------------------------------- | ---------------------------------------- | ------------------------------------------- |
-| Conversion              | Required                            | Required                                 | Required                                 | <span class="fontColor">Not required</span> |
-| Dependency of VM Import | Yes                                 | Partial                                  | <span class="fontColor">No</span>        | <span class="fontColor">No</span>           |
-| Output(s)               | AMI/EBS Snapshot(s)                 | AMI/EBS Snapshot(s)                      | EBS Snapshot(s)                          | No                                          |
-| Integration of vCenter  | Yes (go cloud)                      | Yes (go cloud)                           | Yes (fallback)                           | Yes                                         |
-| Fallback of on-premises | Not supported                       | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span>    |
-| Cost of service itself  | <span class="fontColor">Free</span> | Not free                                 | Expensive (license)                      | Expensive (bare metal)                      |
-| Seamless operation      | No                                  | No                                       | No                                       | <span class="fontColor">Yes</span>    |
+| Item                    | SMS                                 | 3^rd^ Party                              | CloudEndure                                                                                                                                                            | VMConAWS                                    |
+| ----------------------- | ----------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Conversion              | Required                            | Required                                 | Required                                                                                                                                                               | <span class="fontColor">Not required</span> |
+| Dependency of VM Import | Yes                                 | Partial                                  | <span class="fontColor">No</span>                                                                                                                                      | <span class="fontColor">No</span>           |
+| Output(s)               | AMI/EBS Snapshot(s)                 | AMI/EBS Snapshot(s)                      | EBS Snapshot(s)                                                                                                                                                        | No                                          |
+| Integration of vCenter  | Yes (go cloud)                      | Yes (go cloud)                           | Yes (fallback)                                                                                                                                                         | Yes                                         |
+| Fallback of on-premises | Not supported                       | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span>                                                                                                                               | <span class="fontColor">Supported</span>    |
+| Cost of service itself  | <span class="fontColor">Free</span> | Charged                                  | [Conditional free (Migration)](https://aws.amazon.com/cloudendure-migration/pricing/) or [Charged (DR)](https://aws.amazon.com/cloudendure-disaster-recovery/pricing/) | Charged                                     |
+| Seamless operation      | No                                  | No                                       | No                                                                                                                                                                     | <span class="fontColor">Yes</span>          |
 
 :::info
 ###### tags: `AWS` `VMwareCloud` `Architecture` `Migration` `VMImport` `SMS` `CloudEndure` `HCX`
