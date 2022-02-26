@@ -29,81 +29,121 @@ table th:nth-of-type(3) {
 }
 </style>
 
-# Public Cloud Anywhere - Distributed Cloud
+# The Evolution of Cloud Networking on AWS
 
 [TOC]
 
-## <span class="fontColorH2">Where Is It Comes From
-</span> 
+## <span class="fontColorH2">Native Cloud</span>
 
-Before we dig into what is Distributed Cloud, let us see two concise explanations in advance.
+Typically, from the architecture design perspective, you would not consider to put everything together within an VPC. In most cases, the resources would be segregated from the role of the environment. For instance, Production, Developer, and Testbed. Although we certainly know what granular management that [tagging](https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf) rendered, however, the devision is required for the non-technical considerations, that is more about the management purpose instead.
 
-:::spoiler <span class="fontColor2">Gartner</span>
-Distributed cloud is the distribution of public cloud services to <span class="fontColor">different physical locations</span>, while the operation, governance, updates and evolution of the services are the responsibility of <span class="fontColor">the originating public cloud provider</span>.
+As a result, the whole environment would be composed of a bunch of VPCs and even across different accounts/organizations. Therefore, AWS has rendered a couple of managed services to bridge all of them together.
+
+:::success
+:bulb: *Since this post much focuses on the VPC-level solution rather than the Endpoint-level solution so that [PrivateLink](https://aws.amazon.com/blogs/aws/aws-privatelink-update-vpc-endpoints-for-your-own-applications-services/) is not covered here.*
 :::
 
-:::spoiler <span class="fontColor2">IBM Cloud</span>
-Distributed cloud is a public cloud computing service that lets you run public cloud infrastructure in multiple different locations - not only on your cloud provider's infrastructure but <span class="fontColor">on premises, in other cloud providers’ data centers, or in third-party data centers or colocation centers</span> - and manage everything from a single control plane.
+### <span class="fontColorH3">VPC Peering</span>
 
-With this targeted, centrally managed distribution of public cloud services, your business can deploy and run applications or individual application components in a mix of cloud locations and environments that best meets your requirements for performance, regulatory compliance, and more. <span class="fontColor">Distributed cloud resolves the operational and management inconsistencies that can occur in hybrid cloud or multicloud environments.</span>
+If the whole environment is composes of two VPCs then the quickest/easiest way is to leverage VPC Peering. It could be implemented via `VPC > Virtual Private Cloud > Peer Connections` and [Inter-region VPC Peering](https://aws.amazon.com/vpc/faqs/) is available globally in all commercial regions except for the China regions.
 
-Maybe most important, <span class="fontColor">distributed cloud provides the ideal foundation for edge computing</span> - running servers and applications closer to where data is created.
-:::
+![peering-intro-diagram](https://i.imgur.com/jhUhQ83.png)
 
+Other than the prefixes between VPCs cannot overlap, the most importantly, <span class="fontColor">VPC Peering does not allow any transitive communications due to its design</span> (as the 1^st^ image below). Imagine that VPC Peering is designed as a back-door instead of an IXP (Internet exchange point), hence if the requirement is to make all the resources that across different VPCs are able to liaise with each other, then the full-mesh architecture is required</span> (as the 2^nd^ image below).
 
-In summary, there are three key factors from the abovementioned definitions.
+![transitive-peering-diagram](https://i.imgur.com/Y2Sm1nI.png)
 
-- Distributed Cloud is an extension of the region where the cloud service provider has not been launched yet.
-- The resources of Distributed Cloud are completely managed by the cloud service provider nonetheless.
-- One of the use cases for Distributed Cloud is edge computing.
+![three-vpcs-peered-diagram](https://i.imgur.com/UzdxSwD.png)
 
-When we turn to the AWS aspect, the corresponding solution is [Outposts](https://aws.amazon.com/outposts/) which designs by the HCI (Hyperconverged Infrastructure) concept. What Outposts can do according to the abovementioned factors are;
+> :mag: Visit [What is VPC peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) for more details.
 
-- Outposts is able to deliver to anywhere where meets [its requirement](https://docs.aws.amazon.com/outposts/latest/userguide/outposts-requirements.html).
-- Outposts is a fully managed service and managed by an unified console as well as other resources.
-- Since Outposts is able to deliver to anywhere, hence you could locate it to the place where is closed to the clients.
+### <span class="fontColorH3">Transit VPC </span>
 
-## <span class="fontColorH2">What Does It Differ From Edge Computing</span>
+If the transitive communication is required (not only just between VPCs but also with external environments) then there are two methodologies could make it take place: **Transit VPC** and **Transit Gateway**. In other words, they leverage the architecture of Route Reflector (RR) to get rid of the full-mesh requirement.
 
-As mentioned, the edge computing is one of the use cases for Distributed Cloud; however, it does not mean that Distributed Cloud is completely designed for it. That is because Distributed Cloud also takes several non-technical drivers into account, for instance;
+In effect, <span class="fontColor">Transit VPC is a concept instead of a packaged service</span>. In essence, it is formed by a bunch of the Site-to-Site VPN tunnels or BGP over those tunnels between VPCs. It could be implemented via `VPC > Virtual Private Network (VPN)` and it is available globally in all commercial regions.
 
-- The regions where the cloud service provider launches do not meet the organization's compliance requirement, for example; our business cannot launch in several APAC regions.
-- All the organization assets must be stored in the visible stuff, for example; our data has to be stored in the physical and dedicated hardware.
+![Transit VPC](https://i.imgur.com/Q4nW6ji.png)
 
-However, they are very closed to each other in the real world.
+>  :mag: Because it is a concept so that it could be fulfilled by the 3^rd^ party solutions. Essentially, you could adopt any of the on-premises solutions that you have been familiar with if they are able to launch on AWS. Visit [Transit VPC Solutions in AWS Marketplace](https://aws.amazon.com/marketplace/solutions/infrastructure-software/transit-VPC) for more details.
 
-### <span class="fontColorH3">Public Cloud Accelerates The Edge Computing</span>
+### <span class="fontColorH3">Transit Gateway</span>
 
-Before the public cloud becomes popular, what is the primary requirement if an organization wants to broaden its business in different regions? The answer is quite easy to imagine - to build several physical infrastructure sites. However, it has a dependency of how many budget that the organization is willing to invest.
+Unlike Transit VPC is a concept and has to manage by yourself, Transit Gateway (TGW) is a native service that built and managed by AWS completely. The following image is a high-level overview due to TGW could be applied in more agile way as the 2^nd^ diagram.
 
-After the public cloud grew up, it re-defined what is the requirement of local service; the organization no longer need to build the physical sites, instead, it just needs to launch the service in the region where is closed to the clients. The organization could even adopt trial-and-error without a strict plan.
+![Transit Gateway](https://i.imgur.com/WAKWll0.png)
 
-For this reason, the public cloud could be deemed as a prototype of the edge computing. In other words, it has a space to be optimized.
+There are three kinds of TGW Attachments for bridging the resources with TGW.
+1. ++VPC++ - Fasten the VPC which locates in the same region with TGW. It is used for pure AWS environment only.
+2. ++VPN++ - Establish the IPSec VPN tunnels or the BGP adjacency over those tunnels with TGW. It could be used for either pure AWS or external environments. However, there is one thing needs to keep in mind, its capacity. <span class="fontColor">Each VPC/Peering Attachment has 50 Gbps capacity, but each VPN tunnel can only afford up to 1.25 Gbps volume of the traffic.</span> 
+3. ++Peering++ - Establish the BGP adjacency with TGW which locates in different region. It is used for pure AWS environment only.
 
-### <span class="fontColorH3">AWS Anywhere</span>
+All of them which bind with the same TGW form an TGW Route Table. What does it differ from VPC Route Table? That is TGW Route Table acts as an BGP table which involves all the feasible routes. However, it does not account for the actual routing of VPC, it is responsible for VPC Route Table instead. All the above-mentioned features could be implemented via `VPC > Transit Gateways` and they are available globally in most of commercial regions.
 
-When more and more organizations embrace the public cloud, the human nature comes up accordingly; some organizations are not satisfiled by the regions each cloud service provider offers. They want more!
+![Overview](https://i.imgur.com/OPxxbP1.png)
 
-For instance, if an organization wants to broaden its business in Taiwan, but the closest region is Hong Kong, and this region is out of consideration due to it does not meet the compliance requirement. What can organization does? Nothing, unfortunately.
+There is one more methodology could more efficiently utilize/concentrate TGW and that is [Resource Access Manager (RAM)](https://aws.amazon.com/ram/faqs/). TGW is one of the resources that is able to share with multiple accounts. Typically, TGW shall be provisioned in the per-region basis and leverage RAM to centrally bind VPCs and link other TGWs.
 
-Before AWS released Outposts, the organizations were restricted to broaden their businesses according to the regions where AWS launches. However, after it released, all the technical/non-technical boundaries have disappeared.
+![RAM](https://i.imgur.com/MSUqUXY.png)
 
-![Public Cloud Anywhere via Outposts](https://i.imgur.com/l2VNLTV.png)
+![Shared Resources](https://i.imgur.com/crTBcUS.png)
 
-### <span class="fontColorH3">Enhanced AWS Anywhere</span>
+>  :mag: Visit [Performance and limits](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is a transit gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) for more in-depth details.
 
-Nowadays, CDN is not only just for content delivery (cache) but also content distribution (process); therefore, most of the CDN providers have involved the edge computing market. The compute resources behind the CDN provider locate in either the regions where AWS offers or any locations where the Outposts racks locate. As a result, other than the private high-speed transport backbone offers by each CDN provider, the optimization of end-to-end request process would be more significant than without Distributed Cloud. That is because we define where the boundary is.
+### <span class="fontColorH3">Comparison of The Transit Family </span>
 
-![Public Cloud Anywhere via Outposts with CDN](https://i.imgur.com/wFNlZG9.png)
+Like the situation of NAT Instance and NAT Gateway, the self-managed service shall only be adopted when none of native services are acceptable or available. If there is no significant driver to push managing the entire transport by yourself then I do not see any stumbling blocks to stop embracing TGW.
+
+![Comparison](https://i.imgur.com/qNx8tzZ.png)
+
+## <span class="fontColorH2">Hybrid Cloud</span>
+
+In most cases, the hybrid cloud strategy is primarily formed by the cold DR requirement (replicate what we have in the on-premises environment to the cloud) and the go-cloud assessment (is the cloud ecosystem suitable for the organization). Besides leverage existing Internet connection to bridge any resources within VPCs via Site-to-Site VPN, what is the package that AWS offers with more and more reliability than Internet is [Direct Connect](https://aws.amazon.com/directconnect/features/?nc=sn&loc=2), a dedicated circuit links up the whole AWS world with your on-premises environment.
+
+Direct Connect is just a medium, it cannot function by itself so that it relies on the integration of **Virtual Private Gateway**, **Direct Connect Gateway**, or **Transit Gateway** to be functioned. Because of that, <span class="fontColor">Direct Connect is a pure L3 link and only supported BGP for the routing exchange</span>.
+
+Most of well-known ISPs have offered CloudConnect-as-a-service already, such as [PCCW](https://www.consoleconnect.com/clouds/connect-to-amazon-web-services/), [GCX](https://www.globalcloudxchange.com/about-2/cloud-networking/cloud-x-fusion/), and [Megaport](https://www.megaport.com/services/amazon-web-services/). One thing in common in between is they offer all-in-one circuit which is able to link up multiple CSPs together by leveraging their MPLS-VPN transport backbone. Another benefit is their locations of Customer Edge (CE) are much more spreaded than AWS provided.
+
+> :mag: Visit [Technical](https://aws.amazon.com/transit-gateway/faqs/) for more overall guidances and [What is AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html) for more in-depth details.
+
+### <span class="fontColorH3">Virtual Private Gateway</span>
+
+Each VPC has its own Virtual Private Gateway (VPG) that binds with an unique Autonomous System Number (ASN) which is defined via `VPC > Virtual Private Network (VPN) > Virtual Private Gateways`. Therefore, the BGP adjacency relies on it to be established. Since ASN has to be unique from the BGP aspect, for this reason, <span class="fontColor">you need to ensure that it is not duplicate across VPGs albeit AWS Console/CLI do not restrict this behavior</span>.
+
+VPG could be used for bridging either pure AWS or external environments. As the matter of fact, VPG acts as a major component for constructing Transit VPC if none of the 3^rd^ party solutions are taken into account.
+
+![Gateway type](https://i.imgur.com/qZeBNio.png)
+
+![Virtual Private Gateway](https://i.imgur.com/6sIl6SN.png)
+
+### <span class="fontColorH3">Direct Connect Gateway</span>
+
+If you do not have too many VPCs need to be linked up with your on-premises environment(s) then using VPGs could be an option. However, if the situation is opposite (you have tons of VPCs need to be bridged) then concentrating them would be a more ideal way for management. That is why Direct Connect Gateway (DXG) comes up. <span class="fontColor">DXG acts as a global container for grouping VPGs and TGWs per account.</span>
+
+Since VPG would be behind DXG, therefore, it does not matter if ASN conflicts in between due to only DXG's ASN could be seen by external world. It is defined via `Direct Connect > Direct Connect Gateways`. However, <span class="fontColor">you still need to ensure that it is not duplicate across DXGs albeit AWS Console/CLI do not restrict this behavior</span>.
+
+Unlike VPG, DXG is used for linking up with the on-premises environment(s) only.
+
+![Gateway type](https://i.imgur.com/lZ03pp1.png)
+
+![Direct Connect Gateway](https://i.imgur.com/2nmVZCi.png)
+
+### <span class="fontColorH3">Transit Gateway</span>
+
+The same concept of VPG/DXG, if you do not have too many DXGs need to be linked up with your on-premises environment(s) then using it could be an option. However, if the situation is opposite or an additional manipulation is required (for instance, to filter or summarize the prefixes when propagating), then TGW is the only option.
+
+As the in-depth elaration in `Native Cloud \ Transit Gateway`, TGW could be used for bridging either pure AWS or external environments. Refer to that section again for more details.
+
+![Gateway type](https://i.imgur.com/JfvpTPf.png)
 
 ## <span class="fontColorH2">Conclusion</span>
 
-Nowadays, all of us have been benefited by each public cloud provider in that they give us a prototype of edge computing - every deployment has transferred to several simple clicks or API calls.
+Typically, the non-transitive communication is rare especially when the entire application development composes of the on-premises and multiple CSPs resources. In this manner, choose the right service(s) or platform(s) to bridge all of them together is certainly important.
 
-Obviously, we all are greedy that want more. As a result, the Public Cloud Anyware solution comes up. The edge computing should be end-to-end as well - that is on the front-end side, we benefit from the high-speed/resiliency private transport offers by the CDN, and on the back-end side, we are not benefited via the formal regions but also the custome ones.
+By the end of 2020, the most powerful service that AWS provided is TGW definitely. However, it does not mean the rest of the services are useless in that the adoption depends on various consideratios.
 
 :::info
-###### tags: `AWS` `Architecture` `HybridCloud` `EdgeCompute` 
+###### tags: `AWS` `Architecture` `NativeCloudNet` `HybridCloudNet` `VPCPeering` `TransitVPC` `TransitGateway` `DirectConnect`
 :::
 
 {%hackmd BJrTq20hE %}
