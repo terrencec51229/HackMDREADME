@@ -29,28 +29,33 @@ table th:nth-of-type(3) {
 }
 </style>
 
-# About Myself
+# <span class="fontColorH2">The Value of CCIE</span>
 
-[TOC]
+:::success
+:bulb: *This content is re-posted from my [LinkedIn article](https://www.linkedin.com/pulse/value-ccie-terrence-chou/) which posted in March 2020.* 
+:::
 
-## <span class="fontColorH2">Find Your Greatness and Keep Your Faith</span>
+"The Value of CCIE" - this subject has been debated since a long time ago and it is almost refreshed every year after the Top #N certificates of the year were released. I am not trying to make a duplicate place to debate, I just want to share what I think in my mind instead.
 
-This slogan is excerpted by [Nike](https://www.youtube.com/watch?v=WYP9AGtLvRg) and I just want to remind myself whenever I look at it. We are not only just to find out what are we good at, but also have to keep growing up continuously although slowly.
+I think when people commence planning the entire proposal for the CCIE journey, the primary motivation would treat it as a milestone or an achievement. The reason I exclude the salary is that it does not 100% make sense from my perspective. In order to get there, there are a couple of things that will be taken place.
 
-We have been involved in the new era of mixed territories, such as networking, security, storage, and virtualization. They are not standalone anymore, closed to each other instead. Therefore, my goal is not only to keep what I have been familiar with, but also to learn what is news, and evaluate if it is worth to try to optimize the existing environment or resolve the known issues. To be not just a Networking!
+- Firstly, you have to spend time to be more and more familiar with what you have been and have not been good at. As a result, something needs to be compromised or even sacrificed.
+- Secondly (continue with the first point), you have to prepare most of the required materials to ensure that you could be qualified for this title. Therefore, additional expenditures are unavoidable.
+- Lastly, it might not be carried out for the first attempt so that you have to go back the entire cycle again.
 
-## <span class="fontColorH2">The Driver of Write-down</span>
+This goal is not easy to achieve especially you might have to repeat the whole cycle more than one time. <span class="fontColor">It is not just about time and money</span>, the thing is you definitely would feel frustrated then thinking that you let yourself down (how it can be, etc). That is the main reason why you feel so grateful <span class="fontColor">when you get the number</span>. Because you certainly know that you have achieved a significant and meaningful milestone.
 
-As of today, I have been benefited from several useful blogs such as [Nicholas Russo](http://njrusmc.net/), [Cody Hosterman](https://www.codyhosterman.com/), and even any contents could be found by Google. I have had an idea to push my notes to be readable since a long time ago, therefore, I might be able to assist someone in the future as well as those guys. The progress is not so fast, but I will fill this place as my best as possible.
+In conclusion, whenever you hear or see that someone negatively debates that this certification was not valuable at all, please try to recall yourself that what are the drivers to push you moving forward before you are convinced to disagree with the value you created.
 
-Intrinsically, all of my posts would much focus on Networking and Cloud spaces.
+![The value is given by yourself instead of defined by someone else
+](https://i.imgur.com/9C8rd89.jpg)
 
-## <span class="fontColorH2">Reference</span>
 
-[LinkedIn](https://www.linkedin.com/in/terrencec51229/) | [Enhancv](https://cutt.ly/ZQdaVd6)
+Cheers!
+
 
 :::info
-###### tags: `AboutMe`
+###### tags: `AboutMe` 
 :::
 
 {%hackmd BJrTq20hE %}
