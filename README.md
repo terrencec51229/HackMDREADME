@@ -29,188 +29,196 @@ table th:nth-of-type(3) {
 }
 </style>
 
-# Migrate On-premises Workloads To AWS
+# Enhanced Management of Multi-cloud Networking and Security
 
 [TOC]
 
-## <span class="fontColorH2">Outline</span> 
+## <span class="fontColorH2">Business Model Nowadays</span>
 
-Because of the following reasons (mainly from my aspect), more and more organizations have considered to move and launch their businesses on the cloud. 
+As of today, more and more organizations have either evaluated their cloud adoption strategy or investigated the requirement of the multi-cloud; obviously, the cloud world is no longer blurred.
 
-1. <span class="fontColor">++Pay as you go++</span> - Obviously, it is absolutely attractive from the cost management perspective. The payment is only asked whenever you launch any of the services on the cloud.
+Other than Application Modernization (serverless or containerization), another topic that has been paid attention is the multi-cloud networking. The multi-cloud networking has been limelighted by two threads;
 
-    > Not everything is covered by this charge model. <span class="fontColor">The exception is the storage</span>. When you turned off the EC2 instances, you would not charged any fees of the computing resources (the license of the OS, CPU, and Memory) until you turn them up. However, the disk space was allocated so that it cannot avoid to be billed.
+- Multi-cloud network transit.
+- Multi-cloud network management.
 
-2. ++Unlimited resources: less depedencies++ - How long does a set of product or service be deployed in the on-premises environment? The Product team only cares how quick the Infrastructure team could fulfill their requirement. However, from the Infrastructure team aspect, they have to ensure all of their managed resources are enough to be deployed beforehand. What if the resources lack? Does the Product team accept the compromise? How long does the new procurement be in place? Nevertheless, you certainly no longer need to take above-mentioned points into account in the cloud world due to they are fully managed by each CSP. The most importantly, you only need to focus on what is the most cost-effective/full-tolerance design then GO afterward.
-3. ++Rapid deployment: more flexibilities++ - You could provision anything whenever and wherever you are, then decommission everything once they are no longer required. All of your deployments are able to under multiple AZs or even multiple regions easily. Do you want to build a new environment in the Tokyo region? Do you plan to stretch your businesses across multiple regions? If so, what you need to do is JUST GO.
+From the technical standpoint, the multi-cloud network transit is covered with the multi-cloud network management; when turning to the commmercial standpoint, they are supported by a different way.
 
-Besides everything is from scratch on the cloud, the quickest/easiest way is to have a copy there. Therefore,  not only the AWS-native services but also several 3^rd^ party solutions are able to make it happen and worth to keep an eye on as well. So, let's get started.
+- In terms of the multi-cloud network transit, it much emphasizes that ++your cloud-to-cloud communication is passed through a more elastic and reliable (private) transport backbone++.
+- In terms of the multi-cloud network management, it means a lot; typically, it much emphasizes ++how to orchestrate your own network transport by abstracting each CSP's console++ (that is another format of the multi-cloud network transit) and ++how to make every dark side is visible++. The whole offering of the multi-cloud network management is very comprehensive due to it basically involves network security as well. Because of this reason, I would like to dig into this topic a bit more. 
 
-:::success
-:bulb: *Since my environment is primarily composed of Windows Server, Linux, and MS-SQL, and all of them are launched on/managed by the VMware vSphere platform, in this manner, all of my elaborations are based on this background.*
+## <span class="fontColorH2">What Are The Absences</span>
+
+We have been conveyed that to spend your time on developing the applications instead of waste your time on managing the infrastructure in the cloud world; however, when turning to the network management, the reality is that we need a more flexible and transparent way to manipulate self-build network transport nonetheless. There is no doubt that AWS has much strengthened on the network transit feature than Azure and GCP do. You might be curious why, and the answer is [Transit Gateway](https://hackmd.io/@terrencec51229/the-evolution-of-cloud-networking-on-aws#Transit-Gateway); a fully managed service to construct your own cloud network transit. If you want to construct a cloud network transit on either Azure or GCP, you need to build a [Transit VPC](https://hackmd.io/@terrencec51229/the-evolution-of-cloud-networking-on-aws#Transit-VPC-) beforehand.
+
+So, what are the absences of Transit Gateway albeit it looks quite faultless?
+
+- In terms of the deployment, it is very straightforward to bridge everywhere within AWS, but you still cannot avoid managing additional VPN tunnels if the target is out of AWS.
+- In terms of the visibility, although [Network Manager](https://docs.aws.amazon.com/vpc/latest/tgwnm/what-is-network-manager.html) gives an outline of what the whole network topology looks like, the thing is what it provided is not really helpful due to the information it presented is not human-readable (without custom tags).
+
+![Network Manager](https://i.imgur.com/v8T6LM8.png)
+
+Other than that, there are several pain points from the aspect of routine operations as well;
+
+- What is the VPC that an IP prefix belongs to or a workload resides? Especially your deployments across numerous accounts and regions.
+- Is there any way that we could centrally manage the egress access across the accounts, regions, and even clouds?
+- How could we avoid the conflict of the CIDR across the accounts, regions, and even clouds?
+
+For those reasons, let us look at the protagonist in this post - [Aviatrix](https://aviatrix.com/features/), who orchestrates and operates your cloud networks with the agility and simplicity.
+
+## <span class="fontColorH2">How To Efficiently Operate Your Clouds</span>
+
+The entire Aviatrix offering is supported by three components and they will be introduced in-depth in the later sections;
+
+- Aviatrix Controller.
+- Aviatrix (Transit/Spoke) Gateway.
+- CoPilot.
+
+When turning to the Aviatrix solution architecture, it is designed by the SDN (software-defined networking) framework; hence all the deployments are taken place on the Controller side (control plane), and all the traffic manipulations are handled by the Gateway side (data plane). Because of this segregation, all the Gateways are able to function completely without any influence once the Controller is out of service.
+
+![Aviatrix Transit Architecture](https://i.imgur.com/YlDNJJz.png)
+
+### <span class="fontColorH3">Global Transit Network</span>
+
+As its name, ++what Global Transit Network does is to construct your own network transport across the clouds++. Essentially, Global Transit Network is the foundation of the Aviatrix offerings; everything gets started from it. Global Transit Network is primarily composed of Aviatrix Controller, Aviatrix Transit Gateway, and Aviatrix Spoke Gateway. All the Gateways are provisioned via the Controller and all of their details e.g. the image version and the configuration are fully managed by the Controller. 
+
+Let us get started from the following screenshot which is taken from one of the publications of [Cisco Press](https://www.ciscopress.com/articles/article.asp?p=2448489). Typically, most of the enterprise network architectures adopt this way; all the end-users connect to the backbone network via the access layer and the routing decision is happened on the core/distribution layer. Why I accentuate it in the cloud networking topic? Because Global Transit Network inherits this design as well!
+
+![Two-tier Model](https://i.imgur.com/OhGopEh.jpg)
+
+In terms of the functionality, each Gateway acts the role below;
+
+- Aviatrix Spoke Gateway accounts for the same role of the access layer does. What Spoke Gateway does is quite simple, ++it associates with either a single VPC or VNet and then takes over their route tables++. 
+- Aviatrix Transit Gateway accounts for the same role of the core/distribution layer does. As you could imagine that ++Transit Gateway acts as the next-hop of each Spoke Gateway++.
+
+++By default, each Aviatrix Transit Gateway could only associate with a single site which could be an Aviatrix Spoke Gateway or a pair ones behind the scenes; this nature is caused by the `Connected Transit` feature is disabled by default.++ Although it gives you a very granular and decoupled space for any adjustment you want to fulfill, it is too costly, and this extra expenditure may not be really necessary as well.
+
+![Global Transit Network Standard Overview](https://i.imgur.com/6jplssp.png)
+
+:::spoiler <span class="fontColor2">How To Enable Connected Transit</span>
+![Connected Transit](https://i.imgur.com/4B3PF3a.png)
 :::
 
-## <span class="fontColorH2">Conversion-dependent</span> 
+Once the `Connected Transit` feature is enabled, each Aviatrix Transit Gateway is capable of associating with multiple sites; as a result, the whole architecture will like below which is more close to the actual world.
 
-### <span class="fontColorH3">AWS: VM Import</span>
+![Global Transit Network Connected Transit Overview](https://i.imgur.com/lknpDHU.png)
 
-VM Import is a conversion tool for transforming the on-premises virtual machine format (ex: vmdk) into the Amazon Machine Images (AMI) format. In reverse way is VM Export.
+You could even aggregate all the Aviatrix Spoke Gateways by either a region or a CSP consideration and there is no fixed design as well. As the matter of fact, the design of what the whole Global Transit Network will look like is extremely depended on your imagination.
 
-:::success
-:bulb: *Since this post focuses on how to migrate everything to the cloud rather than how to return them to the on-premises environment, hence VM Export is not covered here.*
-:::
+![Global Transit Network Aggregated Connected Transit Overview](https://i.imgur.com/TvXhCaY.png)
 
-VM Import could be manually launched via [AWS CLI](https://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-image-import.html) or automatically launched by either [Server Migration Service (SMS)](https://docs.aws.amazon.com/server-migration-service/latest/userguide/server-migration.html) or the 3^rd^ party backup platforms such as [Commvault](https://documentation.commvault.com/commvault/v11/article?p=30911.htm) and [Rubrik](https://www.rubrik.com/en/blog/technology/19/7/disaster-recovery-developer-environments).
+#### <span class="fontColorH4">:label:TGW Orchestrator</span>
 
-However, every conversion cannot avoid any of compatible failures due to it is its nature. For instance, unsupported format of the import file. The failure trace is sometimes easy to understand then rectify afterward, but it is not sometimes such as [FirstBootFailure](https://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-troubleshooting.html#windows-vm-errors). For this reason, AWS offers [VMImportChecker](https://kb.msp360.com/cloud-vendors/amazon-aws/ensuring-vm-compatibility-with-ec2) for listing all the possibilities of failure.
+Two points that I mentioned from the beginning;
 
-> <span class="fontColor">The output of VMImportChecker might not point out the exact cause(s), it is more about to give you a guidance instead.</span> In my cases, I did have successful conversions with a plenty of FAILED warnings and failed conversisons without any FAILED warnings.
+- AWS has spent more efforts on the network transit feature when compared with the other Big-3 members.
+- One of the primary goals of Aviatrix is to orchestrate your cloud networks with the simplicity.
 
-### <span class="fontColorH3">AWS: VM Import - Server Migration Service</span>
+As a result, that is why TGW Orchestrator is here.
 
-As its name, Server Migration Service (SMS) is used for migrating your on-premises virtual machines which managed by either VMware vSphere or Microsoft Hyper-V. 
-How it functions? SMS leverages SMS Connector to link up the on-premises hypervisor with your target AWS environment. <span class="fontColor">Each SMS Connector can only fasten a single account/region</span> so that means you will need more than one SMS Connectors if your target is multiple.
+First of all, ++this feature supports AWS only++ due to Transit Gateway is one of its VPC components. Secondly, this feature emphasizes segmentation which is called Security Domain in the Aviatrix world. ++Segmentation does support to be implemented by Aviatrix Transit Gateway as well++, hence there is no need to worry about if your business is on either Azure or GCP.
 
-SMS Connector is a virtual appliance as well as all of your virtual machines, nothing special. After initialized, you no longer need to take care of it due to every manipulation will be performed on AWS Console instead. [How can I initialize it?](https://docs.aws.amazon.com/server-migration-service/latest/userguide/VMware.html) Intrinsically, the whole process is just composed of several next-clicks, hence you do not really need to prepare any instructions in advance in that the intention of each step is pretty straightforward to be understood.
+In essence, ++a Security Domain means a VRF++. ++Each Transit Gateway Route Table is the representative of Security Domain++ and you could use both Association and Propagation to manage and ensure the isolation. Let me use the following screenshots for the explanation.
 
-Here is how it functions in detail once the initialization is complete.
+- The VPC <span class="fontColor">*Aviatrix_Prod*</span> associates with its own Transit Gateway Route Table <span class="fontColor">*Aviatrix_Prod*</span>.
+- Before any change takes place, the Transit Gateway Route Tables <span class="fontColor">*Aviatrix_FireNet_Domain*</span> and <span class="fontColor">*Aviatrix_Prod*</span> are isolated; that is none of the resources are able to communicate with each other.
+- When connected those two Transit Gateway Route Tables, all their resources are able to communicate with each other. One thing needs to keep in mind is that the  propagation via TGW Orchestrator is the entire CIDR of the VPC; that is you need to leverage the AWS methods e.g. Web, CLI, or CDK for a more granular level e.g. subnet or host.
 
-![VMIE: Server Migration Service](https://i.imgur.com/S6HyuLw.jpg)
+![Security Domain](https://i.imgur.com/085bwKN.png)
 
-1. When the required replication jobs are defined on SMS, it will liaise with SMS Connector to follow up once the jobs are launched by either an one-time or a schedule event.
-2. When SMS Connector is informed, it will ask vCenter to take the snapshots of all the target virtual machines then collect all of them afterward.
-3. SMS Connector uploads those snapshots to the S3 bucket created by SMS automatically.
-4. SMS calls VM Import to fetch those snapshots, convert all of them, and validate if the corresponding EBS Snapshot(s) and AMI are able to be generated.
+![Security Domain](https://i.imgur.com/RtD3lB5.png)
 
-### <span class="fontColorH3">AWS: VM Import - 3^rd^ Party</span>
+### <span class="fontColorH3">FireNet</span>
 
-Generally speaking, most of well-known backup platforms have supported to protect the workload or data to the cloud. In essence, the back-end technology should not have too much differences due to it is just to protect the targets to another place from my perspective. As a result, let's directly jump in how they function in detail once the initialization is complete and what does it differ SMS as well.
+A firewall network or FireNet is a collaboration architecture between Global Transit Network and the firewall appliance e.g. AWS Network Firewall or Fortinet FortiGate. In essence, ++you could deem FireNet as an advanced Global Network Transit with the network security enhancement++. There are two working models of FireNet;
 
-![VMIE: 3rd Party Backup](https://i.imgur.com/8cfR9qL.jpg)
+- Standard FireNet - a dedicated Aviatrix Transit Gateway acts as a FireNet Transit Gateway.
+- Transit FireNet - enable the FireNet feature on the existing Aviatrix Transit Gateway.
 
-1. When the required replication jobs are defined on the backup platform, it will ask vCenter to take the snapshots of all the target virtual machines then collect all of them afterward. Typically, all the backup platforms would compare the current snapshot with previous one then generate a new differential file before uploading. This behavior is also called differential or incremental backup.
+#### <span class="fontColorH4">:label:Standard FireNet</span>
 
-    > :dart: SMS will upload all the snapshots immediately once collected due to it is just a pure migration tool.
+The foundation of Standard FireNet is AWS Transit Gateway; in other words, ++this model is purely designed for AWS++. Because of this reason, the Standard FireNet model closely collaborates with Security Domain.
 
-2. The backup platform uploads those differential snapshots to the S3 bucket you specified.
+![Firewall Network](https://i.imgur.com/r5FaEBr.png)
 
-    > :dart: SMS cannot specify the target bucket.
+When a Security Domain connects to <span class="fontColor">*Aviatrix_FireNet_Domain*</span> which is automatically created when deploying AWS Transit Gateway via Aviatrix Controller, two actions will be taken place;
 
-3. The backup platform launches its converters and informs them to fetch those snapshots then convert all of them afterward. Typically, those backup platforms do not rely on VM Import for conversion, their own conversion architecture instead.
-4. Once the conversions are completed, the converters will inform VM Import to validate if the corresponding EBS Snapshot(s) and AMI are able to be generated.
+- A default route and the FireNet CIDR will be added to the linked Security Domain automatically.
 
-    > :dart: SMS fully relies on VM Import for both conversion and validation. In addition, each SMS Connector can only fasten a single account/region. That means you will need more than one SMS Connectors if your target is multiple. Those backup platforms are able to link up with multiple accounts/regions by their  job management without managing more than one platforms; for instance the workloads that belong to the 1^st^ job will be replicated to the 1^st^ account/region, the workloads that belong to the 2^nd^ job will be replicated to the 2^nd^ account/region, and etc. 
+![Transit Gateway Route Table](https://i.imgur.com/uDAYHIT.png)
 
-### <span class="fontColorH3">AWS: CloudEndure</span>
+- The entire VPC Route Table will be taken over by AWS Transit Gateway automatically.
 
-Essentially, CloudEndure acts as next-generation of SMS. More accurately, AWS has officially promoted it as the most ideal migration platform rather than SMS. There are two operation models that CloudEndure renders, [Migration](https://aws.amazon.com/cloudendure-migration/) and [Disaster Recovery](https://aws.amazon.com/cloudendure-disaster-recovery/). However, from its architecture perspective, there is no difference in between. When I investigated into the document again then I found out the key difference might be about [MAP (Migration Accleration Program)](https://docs.cloudendure.com/#Introduction/Introduction.htm#Understanding_the__Migration_Solution%3FTocPath%3DNavigation%7CIntroduction%7CCloudEndure%2520Solutions%7C_____1) <span class="fontColor2">~#1~</span>. When you receive the details of MAP Project; for instance the server-id mapping (on-premises vs. cloud), CloudEndure Migration is able to import this information for migration afterward <span class="fontColor2">~#2~</span>.
+![VPC Route Table](https://i.imgur.com/VBmVXr6.png)
 
-:::spoiler <span class="fontColor2">What is AWS MAP in overview</span>
-> 1. The [AWS MAP](https://aws.amazon.com/migration-acceleration-program/) is a comprehensive consulting service when the organization decides to kick off the journey of cloud migration. There are abundant prerequisites will take place afterward such as discussions (++what are the business drivers++), confirmations (++what have you done for the strategy/technical design before the journey++), and documentation (++how many things that have been well-documented and able to share with them++). The following screeshot shows up how many categories (and some of the questions) that the AWS MAP team covers. <p>![MRA Customer](https://i.imgur.com/9TKR24a.png)<p/>Typically, a pure DR environment would be a cold site and also, its strategy would prefer keeping minimum compute resource as possible due to cost-driven. In other words, the hot DR environment will only be switched on by demand. As a result, you will not kick of MAP because of the DR requirement in general.
-> 2. <span class="fontColor">The only supported service that could be launched by CloudEndure is EC2.</span> In other words, it is more suitable if you have not considered to re-architect the application framework, keep the strategy of a virtual machine replaces with an EC2 instance instead. 
-:::
+#### <span class="fontColorH4">:label:Transit FireNet</span>
 
-How does CloudEndure launch the on-premises workload on the cloud? Conversion, as well as SMS and the 3^rd^ party platforms (I will call them VM Import based solutions for simplicity). However, <span class="fontColor">CloudEndure completely decouples VM Import</span> <span class="fontColor2">~#3~</span>, it does not rely on VM Import for both conversion and validation.
+What if the customers do not want to extra deploy a dedicated Aviatrix Transit Gateway that just for FireNet? Or they are keen to benefit from the FireNet architecture for a more granular inspection albeit their resources are out of AWS or across different clouds? That is why Transit FireNet comes up, ++a FireNet architecture regardless of what the CSP is++.
 
-![Proprietary Conversion](https://i.imgur.com/ZIXg4qo.png)
+Unlike Standard FireNet relies on AWS Transit Gateway to function, Transit FireNet is a built-in feature of Aviatrix Transit Gateway; as a result, the entire routing is still handled by Global Transit Network completely.
 
-:::spoiler <span class="fontColor2">A black hole - VM Import</span>
-> - A successful conversion composes of two pieces - conversion and validation. Although the piece of conversion is successfully complete, the AMI and its EBS Snapshot(s) still cannot be generated without passing the piece of validation. That is a case that our environment has encountered as yet. The conversions were complete by the VM Import based solutions, however, none of them were able to pass the VM Import validation. It did not happen all the time, randomly instead albeit the targets were the same virtual machines. What we have done is collaborating with Support of the 3^rd^ party platform for verifying if anything changed for calling VM Import at first, then escalating to AWS Support for verifying if anything changed for the behavior of VM Import afterward. Unfortunately, there was no any good news after a long time investigation. The weird situation we were in was the issue resolved by itself and AWS Support confirmed that nothing changed.
-> - During this failure period, we did confirm that CloudEndure did not rely on VM Import as highlighted on the white paper due to all the failure cases at that moment were able to form the AMI/EBS Snapshot(s).
-:::
+![Transit FireNet Overview](https://i.imgur.com/maayybo.png)
 
-CloudEndure composes of three components - agent, replication server, and converter. The behaviours of replication server and converter are identical to those VM Import based solutions. The replication server accounts for uploading the snapshots to the S3 bucket it manages and the converter accounts for fetching the snapshots from the bucket then forming the AMI/EBS Snapshot(s) afterward.
+Because the routing is still handled by Global Transit Network, hence nothing will be changed on the VPC Route Table after enabled the Transit FireNet feature; all the changes will happen on Aviatrix Transit Gateway only e.g., additional interfaces will be created, and a default route will be pointed toward the firewall appliance.
 
-So, what about the agent? Unlike those VM Import based solutions are natively integrated with vCenter for manipulating all the virtual machines, <span class="fontColor">CloudEndure leverages its agents which installed on all the target workloads to register all the target workloads on its management console</span>. Once the register completes, you are able to define the replication schedule or launch the recovery procedure afterward.
+![Transit FireNet Detail](https://i.imgur.com/yDgf9Uv.png)
 
-Intrinsically, what SMS does is ++to convert the snapshot(s) into the AWS format++, and what those 3^rd^ party platforms do is ++not only to perform the conversion but also able to launch the converted resource(s) by demand++. Other than the independency of VM Import, what CloudEndure primarily differs them is the recovery plan. From my perspective, CloudEndure is in more VMware SRM (Site Recovery Manager) alike design due to the following thoughts.
+### <span class="fontColorH3">Egress FQDN Filtering</span>
 
-1.  The converted resource(s) could be launched by either the [Test](https://docs.cloudendure.com/#Configuring_and_Running_Disaster_Recovery/Testing_the_Distaster_Recovery_Solution/Testing_the_Disaster_Recovery_Solution.htm#Testing_the_Disaster_Recovery_Solution%3FTocPath%3DNavigation%7CConfiguring%2520and%2520Running%2520Disaster%2520Recovery%7CTesting%2520the%2520Disaster%2520Recovery%2520Solution%7C_____0) or [Recovery](https://docs.cloudendure.com/#Configuring_and_Running_Disaster_Recovery/Performing_a_Disaster_Recovery_Failover/Performing_a_Disaster_Recovery_Failover.htm#Performing_a_Disaster_Recovery_Failover_and_Failback%3FTocPath%3DNavigation%7CConfiguring%2520and%2520Running%2520Disaster%2520Recovery%7CPerforming%2520a%2520Disaster%2520Recovery%2520Failover%2520and%2520Failback%7C_____0) mode albeit it is for indication only. <p>![Test-versuses-Recovery](https://i.imgur.com/kT4WYFl.png)<p/>
-2. It is not only offering the package of failing over to the cloud but also failing back to the on-premises vCenter. <p>![CESM](https://i.imgur.com/db1opRo.png)<p/>
+As its name, ++what Egress FQDN Filtering does is to restrict the Internet access on the FQDN level++. There are two working models of Egress FQDN Filtering as well as FireNet;
 
-Here is how it functions in detail once the initialization is complete.
+- Spoke FQDN Gateway - enable the feature on the existing Aviatrix Spoke Gateway.
+- FireNet FQDN Gateway - a dedicated Aviatrix Spoke Gateway acts as a Egress FQDN Filtering Gateway.
 
-![No VM Import: CloudEndure](https://i.imgur.com/o78BXgA.jpg)
+#### <span class="fontColorH4">:label:Spoke FQDN Gateway</span>
 
-1. Install the CloudEndure agent on each target that needs to be protected. The agent functions immediately once deployed, there is no need to reboot the system to bring it up.
-2. Once the agent successfully registers on the CloudEndure console then you are able to customize the replication plan for each individual workload or a group of them afterward.
-3. When the replication plan launches by either an one-time or a schedule event, the replication server will be waken up then fetching the snapshot from the source workload via the agent. Afterward, the converter will be waken up then converting the snapshot into the EBS Snapshot format. <span class="fontColor">Nothing about the restoration in this stage, the preparation for it instead.</span>
+The easiest and quickest way is to turn on this feature on the Aviatrix Spoke Gateway directly. However, it is not a good choice; it is more acceptable for the temporary purpose. The primary reason is that the FQDN gateway is external-face, the Source NAT feature has to be turned on accordingly. You will no longer be able to embrace Transit FireNet once you do so due to Aviatrix Spoke Gateway acts as a NAT Gateway; that is the external egress traffic will be terminated on it and will not be forwarded to Aviatrix Transit Gateway anymore. It will be a nightmare especially when you have numerous Spoke FQDN Gateways no matter they are within a single cloud or across the clouds.
 
-    > :dart: Unlike those VM Import based solutions will form both the AMI/EBS Snapshot(s), <span class="fontColor">CloudEndure generates the EBS Snapshot(s) only</span>.
+#### <span class="fontColorH4">:label:FireNet FQDN Gateway</span>
 
-4. When either the Test or Recovery event launches, a couple of the tasks will be taken place. Firstly, the EBS Volume(s) will be created by the EBS Snapshot(s) you specified. Secondly, the EC2 instance will be established with the instance-type you specified, then attaching the EBS Volume(s) created by the previous step.
+The most ideal way to launch the FQDN gateway is based on either the Standard FireNet or Transit FireNet structure. All the details are elaborated in the whole ***FireNet*** section.
 
-### <span class="fontColorH3">Comparisons</span>
+### <span class="fontColorH3">Observability</span>
 
-The following table primarily summarizes what they differ each other.
+Once you have all the features in place, the next task will be the visibility; that is CoPilot's responsibility. CoPilot is composed of several modules e.g. Topology, FlowIQ, and Performance. Typically, the information it presents is not easy to produce by yourself; it would be a lots of efforts if you want to e.g., deploy and manage your own probes across the clouds, develop the analysis framework, and then visualize the outcome. I do not want to introduce each module due to it will be a bit tedious, I would like to limelight some of them instead.
 
-| Item                    | SMS                                 | 3^rd^ Party                              | CloudEndure                                                                                                                                                            |
-| ----------------------- | ----------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dependency of VM Import | Yes                                 | Partial (validation)                     | <span class="fontColor">No</span>                                                                                                                                      |
-| Output(s)               | AMI/EBS Snapshot(s)                 | AMI/EBS Snapshot(s)                      | EBS Snapshot(s)                                                                                                                                                        |
-| Integration of vCenter  | Yes (go cloud)                      | Yes (go cloud)                           | Yes (fallback)                                                                                                                                                         |
-| Fallback of on-premises | Not supported                       | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span>                                                                                                                               |
-| Cost of service itself  | <span class="fontColor">Free</span> | Charged                                  | [Conditional free (Migration)](https://aws.amazon.com/cloudendure-migration/pricing/) or [Charged (DR)](https://aws.amazon.com/cloudendure-disaster-recovery/pricing/) |
+#### <span class="fontColorH4">:label:Topology</span>
 
-## <span class="fontColorH2">Conversion-independent</span> 
+There are three key spotlights;
 
-### <span class="fontColorH3">3^rd^ Party: VMware Cloud on AWS</span>
+- Everything is presented in a single pane; it does not matter your network transport is built on which account, region, and even cloud.  
+- Compute resource inventory; are you satisfied if the visualization covers the networking stuff only? Well, the answer is No without doubt especially when your services are launched across the accounts, regions, and even clouds. That is one of the reasons why CoPilot is so fascinating due to you will be able to promptly find out where your compute resource resides. <span class="fontColor">Please allow me to use the following screenshot for the depiction which I took from [YouTube](https://www.youtube.com/watch?v=vJtEpX89ecA) due to I forgot to capture it during the assessment period...</span>
 
-Other than those conversion-based solutions, do we have another option(s) if the following drivers are being taken into account.
+![Compute resource inventory](https://i.imgur.com/K3b2tSZ.jpg)
 
-1. ++Minimize and even avoid the change(s)++: I neither need any fancy cloud-native services nor want to re-architect the application framework. What I need is just a place to run the business on the cloud as soon as possible instead.
-2. ++Keep consistency++: This cloud platform is able to seamlessly integrate with what we manipulated in the on-premises environments. I do not want to panic the existing operation model.
+- Tags are able to present; in terms of the visibility, CoPilot could be deemed as an enhanced AWS Transit Gateway Network Manager due to Global Transit Network is not only able to view in multiple tiers e.g. cloud, region, and VPC/VNet, but also with keys and values.
 
-If so, I believe that [VMware Cloud on AWS](https://cloud.vmware.com/vmc-aws/use-cases) (VMConAWS) would be the most ideal solution accordingly. As of today, VMware Cloud has been accomplished not only on AWS but also on [Azure VMware Solution](https://azure.microsoft.com/en-us/services/azure-vmware/) and [Google Cloud VMware Engine](https://cloud.google.com/vmware-engine). Let's dig into each above-mentioned driver in more details.
+![Tags](https://i.imgur.com/FaxGOj8.png)
 
-#### <span class="fontColorH4">Minimize and Even Avoid The Change(s)</span>
+#### <span class="fontColorH4">:label:AppIQ</span>
 
-There are two methodologies for migrating the on-premises workloads to the cloud - Site Recovery Manager (SRM) and Hybrid Cloud Extension (HCX). In essence, you could treat HCX as a free edition of SRM due to they have something in common.
+What AppIQ offers is an end-to-end analysis from the network latency aspect. In addition, it also includes the FlightPath report which is a very useful tool of diagnosing the reachability.
 
-1. From the viewpoint of replication, there is no difference in between due to they rely on vSphere Replication (vR) to function.
-2. They are running on a pair structure, that is one SRM/HCX reside in the on-premises environment and the other ones reside on the SDDC.
+![AppIQ](https://i.imgur.com/fyUXLLB.png)
 
-Typically, their replication behavior do not have too much differences with those conversion-based solutions due to they adopt the same ways as well as them - 1) define the rules, 2) fetch the files, 3) replicate or upload those files to the remote end, and 4) launch the recovery procedure. Since it is a VMware-to-VMware solution, therefore, <span class="fontColor">none of the conversions are required and all the protected targets are able to wake up immediately</span>.
+FlightPath is an end-to-end analysis of the reachability; it does not rely on CoPilot to function, instead, it is launched via Aviatrix Controller. The reason why FlightPath is so helpful due to its granularity is capable of narrowing down to the Security Group layer instead of just the Route Table layer. You could even recall how many times you got stuck in a broken reachability due to the absence of the visibility.
 
-![No VM Import: VMware Cloud on AWS, Replication](https://i.imgur.com/akkmx5p.png)
+![FlightPath](https://i.imgur.com/cQi5fDU.png)
 
-However, when you compare them in more details then you still can find out they are slightly different; for instance... 
+## <span class="fontColorH2">Conclusion</span>
 
-1. HCX is a free add-on, but SRM is a [subscription](https://cloud.vmware.com/vmware-site-recovery/pricing) add-on.
-2. HCX can only protect up to [500](https://configmax.vmware.com/guest?vmwareproduct=VMware%20HCX&release=VMware%20HCX&categories=41-0,42-0,43-0,44-0,45-0) virtual machines.</span> As a result, you need to additionally leverage SRM if the total workload that needs to be protected is over 500.
-3. The architecture of HCX is fully decoupled, both the control (HCX Interconnect/Network Extension) and the management (HCX Manager) plans are separated. By contrast, SRM does not adopt this design.
+Networking is a core and very fundamental component, therefore, it is almost invisible and even looks valueless, no matter it functions in the on-premises or the cloud. However, it does not mean that it could be ignored!
 
-![No VM Import: VMware Cloud on AWS, HCX Deep Dive](https://i.imgur.com/kNiMQST.jpg)
+When turning to the cloud world, networking is one of the managed offerings of each CSP, therefore, how to manage the inter-communications across the clouds with a  straightforward approach, and how to enlarge the visibility to streamline the routine operation, that have become one of the key cloud adoption strategies nowadays.
 
-> The original diagram is from [viktorious.nl](https://www.viktorious.nl/2019/12/11/a-closer-look-at-hcx-in-combination-with-vmconaws-part-1/).
-
-:::spoiler <span class="fontColor2">Live migration - vCenter Hybrid Link Mode</span>
-> - As its name, HCX is purely designed for the cloud migration. Therefore, what it can do is not only just the off-site migration <span class="fontColor">but also the live migration</span>. <span class="fontColor">Yes, that is vMotion.</span> In order to get there, there is one more prerequisite needs to be in place beforehand - [vCenter Hybrid Link Mode (HLM)](https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vsphere.vmc-aws-manage-data-center-vms.doc/GUID-91C57891-4D61-4F4C-B580-74F3000B831D.html). What vCenter HLM does is to integrate the SSO domain of the on-premises vCenter with the SDDC vCenter so that we are able to manage all the virtual machines aross the environments by a single vSphere console.  <p>![No VM Import: VMware Cloud on AWS, vMotion](https://i.imgur.com/ULT5lDV.png)<p/>
-> - The live migration relies on the Network Extension feature or more accurately, this feature spreads the L2 domain of the on-premises network. As a result, <span class="fontColor">both the inbound/outbound connections are still proceeded via the on-premises resources (ex: firewall/load-balancer)</span>.
-:::
-
-#### <span class="fontColorH4">Keep Consistency</span>
-
-One of the primary cloud strategies is to use the service instead of manage them. The entire VMConAWS is fully managed by VMware (vSphere API) and AWS (bare metal), hence VMConAWS has not opened several features that have not been restricted in the on-premises vSphere environment; for instance you will not have the root permission and none of the external datastores can be mounted by yourself. The main driver for those rules is to make every SDDC is consistent so that VMware Support is able to address the issue as quick as possible.
-
-Other than those cloud-native restrictions, there is nothing different with the on-premises vSphere environment, and none of the familiarities are from zero as well.
-
-#### <span class="fontColorH4">Comparisons</span>
-
-The following table primarily summarizes what VMConAWS differs those conversion-based solutions.
-
-| Item                    | SMS                                 | 3^rd^ Party                              | CloudEndure                                                                                                                                                            | VMConAWS                                    |
-| ----------------------- | ----------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| Conversion              | Required                            | Required                                 | Required                                                                                                                                                               | <span class="fontColor">Not required</span> |
-| Dependency of VM Import | Yes                                 | Partial                                  | <span class="fontColor">No</span>                                                                                                                                      | <span class="fontColor">No</span>           |
-| Output(s)               | AMI/EBS Snapshot(s)                 | AMI/EBS Snapshot(s)                      | EBS Snapshot(s)                                                                                                                                                        | No                                          |
-| Integration of vCenter  | Yes (go cloud)                      | Yes (go cloud)                           | Yes (fallback)                                                                                                                                                         | Yes                                         |
-| Fallback of on-premises | Not supported                       | <span class="fontColor">Supported</span> | <span class="fontColor">Supported</span>                                                                                                                               | <span class="fontColor">Supported</span>    |
-| Cost of service itself  | <span class="fontColor">Free</span> | Charged                                  | [Conditional free (Migration)](https://aws.amazon.com/cloudendure-migration/pricing/) or [Charged (DR)](https://aws.amazon.com/cloudendure-disaster-recovery/pricing/) | Charged                                     |
-| Seamless operation      | No                                  | No                                       | No                                                                                                                                                                     | <span class="fontColor">Yes</span>          |
+> Published on 4^th^ July 2022. 
 
 :::info
-###### tags: `AWS` `VMwareCloud` `Architecture` `Migration` `VMImport` `SMS` `CloudEndure` `HCX`
+###### tags: `AWS` `Azure` `GCP` `OCI` `Aviatrix` `Architecture` `NativeCloudNet` `TransitVPC` `TransitGateway`  `Muiticloud`
+:::
+
+:::warning
+:repeat: Return To [Index](https://bit.ly/terrencec51229).
 :::
 
 {%hackmd BJrTq20hE %}
