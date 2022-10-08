@@ -247,26 +247,29 @@ Typically, ++the Transit Gateway Route Table attachment is equivalent to the Tra
 
 ### <span class="fontColorH3">Anything Else?</span>
 
-Other than above mentioned capabilities, there are additional two differences between Transit Gateway and Cloud WAN.
+Other than above mentioned capabilities, there are additional three differences between Transit Gateway and Cloud WAN.
 
 - **Simpler operations** - for operators who are keen to address the following situations, Cloud WAN is what they seek for;
     - They are not familiar with managing multi-hierarchies/segments of the network transport.
     - They aim to streamline the whole Transit Gateway manipulation, e.g., segmentation across a variety of Transit Gateway Route Tables or cross-region routing exchange across a number of Transit Gateway Peerings.
     - The Network-as-Code is a preferred method for routine operation.
+- **More Agility** - when you want to filter any route entry, what you would perform on Transit Gateway is not to propagate the whole CIDR of the VPC to Transit Gateway Route Table, a more accurate static route instead; in other words, the control takes place on the route-entry level, the import/export cannot be on the segment (Transit Gateway Route Table) level. In terms of Cloud WAN, it supports both ways; ++that is other than the prefix filter, all the segments could be used as the objects for import/export++.
 - **Higher CapEx** - intrinsically, the charge model and pricing are quite close or even identical between Transit Gateway and Cloud WAN except for Core Network Edge. ++Transit Gateway itself is not charged, but each Core Network Edge charges $0.5/hour.++ Imagine that you have 4 Core Network Edges across regions in your environment, that means you need to extra pay $1,440/month without any attachments and data processes when compared with Transit Gateway.
 
-Typically, if you are familiar with the whole Transit Gateway manipulation and all the modifications have involved in your automated framework already then Cloud WAN may not really an interesting solution for you because of the cost that highly depends on how many Core Network Edges will be provisioned.
+For those reasons, if you are familiar with the whole Transit Gateway manipulation and all the modifications have involved in your automated framework already then Cloud WAN may not able to catch your eyes because of its cost model.
 
 ## <span class="fontColorH2">Conclusion</span>
 
-For mitigating any unwanted request toward your service origins as close to the sources (requesters) as possible, we typically defense them on the CDN (edge) side. When looking at the cloud security on the infrastructure level, both Transit Gateway and Cloud WAN adopt the same strategy as well; the restriction/isolation happens on the segment instead of via Security Groups.
+For mitigating any unwanted requests toward your service origins as close to the sources (clients) as possible, we typically defend them on the edge (CDN) side. When looking at cloud security on the infrastructure level, both Transit Gateway and Cloud WAN adopt the same strategy as well; the isolation happens on the segments layer instead of the network access layer, e.g. Network Firewall/ACL and Security Group.
 
-Furthermore, why Cloud WAN is more fascinating than Transit Gateway is that it simplifies the operations a lot albeit I have to admit that its overall pricing is not so tasty :expressionless:.
+Why Cloud WAN is more fascinating than Transit Gateway from my viewpoint because it not only hugely simplifies operations but also completes the absences of Transit Gateway. Further, it makes the cloud networking operation close to the traditional MPLS VPN model :grin:.
+
+But, I still have to admit that its overall pricing is not so tasty :sweat_smile:.
 
 > Published on 6^th^ October 2022. 
 
 :::info
-###### tags: `AWS` `Architecture` `NativeCloudNet` `TransitVPC` `TransitGateway` `CloudWAN`
+###### tags: `AWS` `Architecture` `NativeCloudNet` `TransitVPC` `TransitGateway` `CloudWAN` `Segmentation`
 :::
 
 :::warning
