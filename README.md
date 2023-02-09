@@ -29,247 +29,79 @@ table th:nth-of-type(3) {
 }
 </style>
 
-# Globally Operate Your Network Transport via Cloud WAN
+# Supercloud 101
 
 [TOC]
 
-## <span class="fontColorH2">Retrospect</span>
+## <span class="fontColorH2">What Is Supercloud?</span>
 
-In my old post, [The Evolution of Cloud Networking on AWS](/MlL4xLyQRgG8PFagIgU7FQ) I elaborated what and why Transit Gateway could revamp your network transport. Although Transit Gateway has been generally available since [November 2018](https://aws.amazon.com/about-aws/whats-new/2018/11/introducing-aws-transit-gateway/) (ready to 4^th^ anniversary), it is still the most powerful feature in the Cloud Networking space across the board.
+What is Supercloud? You probably have several questions, e.g.,
 
-If you think that Transit Gateway will be the last fascinating networking offering then you are definitely wrong!
+- Is it a new terminology?
+- What does it differ from the Private Cloud, Public Cloud, and Multi-cloud?
 
-## <span class="fontColorH2">New Launch</span>
+Before we dive into each of them, let us retrospect the transition between the cloud models at the outset.
 
-In July 2022, AWS formally announced another cool feature called [Cloud WAN](https://aws.amazon.com/about-aws/whats-new/2022/07/general-availability-aws-cloud-wan/). As the matter of fact, I was a bit confused about its name due to WAN typically means external/public networks; however, what Cloud WAN is responsible for is not really about WAN, instead, ++it is more about globally consolidate all of your network ingredients, e.g. VPC, Transit Gateway, Site-to-Site VPN, and SD-WAN across regions into a single and unified management console++.
+- Typically, most organisations get started from on-premises data centres/colocations where aka the **Private Cloud**; their operation team fully handles the underlay infrastructure routines, e.g. procurement, installation, or optimisation.
+- Because the benefits introduced by [cloud computing](https://aws.amazon.com/what-is-cloud-computing/) have been accepted widely, more and more organisations kick off their digital transformation journey and move their business on either Amazon, Microsoft, or Google these **Public Cloud** vendors.
+- Essentially, when an organisation gets enough familiarity with a single CSP, its offering might not meet the organisation's business requirements across the functionality *(Google is strong in data analysis*) and risk *(should we not put everything on Amazon?)* considerations. As a result, the **Multi-cloud** strategy would be formulated.
 
-Other than the name, I was also a bit confused about what are the key differences when compared with Transit Gateway in terms of the standpoint of their functionalities especially after I read the [Preview](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-aws-cloud-wan-preview/) post. As a result, the following questions came up in my brain;
+++When an organisation moves to the multi-cloud phase, either multiple CSPs or with on-premises environments (aka **Hybrid Cloud**), one thing that would be emphasised is consistency, either architectural or operational.++ In terms of compute resource deployments, you definitely could extend the existing deployment framework to another CSP and even more; however, it takes time due to each CSP has proprietary service architectures and they are not compatible with others. For this reason, would it be more simply and efficiently if there is an abstracted layer between the operation team and clouds? In other words, the operation team does not require to directly communicate with respective CSPs, instead, they just need to talk to that orchestrator and it would be on their behalf to face those clouds. ++That is what Supercloud aims to be!++
 
-- Is Cloud WAN able to completely take over all the functionalities that Transit Gateway supports?
-- Does Cloud WAN aim to replace Transit Gateway entirely?
+![Segregation vs. Aggregation](https://i.imgur.com/dfh91ko.png)
 
-![AWS Cloud WAN Components](https://i.imgur.com/IFcYMFv.png)
+Here is the definition from [Supercloud Working Group Definition](https://docs.google.com/document/d/1SP0G-3CEnJ4Zz1sPoZt6eA6Weq8F5Osk93jLcPLcK60).
 
-In terms of the standpoint of the key offering, I do not think that AWS is willing to see there are two products without any differentiators. The best way to demystify any uncertainty is always to deploy, verify, and observe instead of reading documents without any implementations.
+> *Supercloud is an emerging ++distributed++ computing architecture that comprises a set of services ++abstracted from the underlying primitives of proprietary clouds++ (e.g., compute, storage, networking, security, and other native resources) to create a global system spanning to all clouds it is interfaced with. In principle, Supercloud has the capability to allow the integration of any current and future hyperclouds or other proprietary cloud architectures.*
 
-## <span class="fontColorH2">Demystification</span>
-### <span class="fontColorH3">Comparison</span>
+The following sections will discover more.
 
-From my viewpoint, it would be more straightforward to dig a new feature by comparisons; hence I use the Transit Gateway architecture to compare with the Cloud WAN one. Its architecture involves the following scenarios;
+## <span class="fontColorH2">Is Supercloud An Evolution of Multi-cloud?</span>
+I know that the Supercloud is a bit controversial due to not everyone agrees with it as one of the cloud models. In addition, someone deems that it is a marketing term. As the matter of fact, I do not want to debate what it really is; ++however, one thing is worth us keeping in mind is that [the multi-cloud strategy has transitioned to a by-default pattern instead of by a design requirement](https://www.youtube.com/watch?v=KrYPKBQDcGM&t=386s)++.
 
-![Transit Gateway Topology](https://i.imgur.com/tls7k9l.png)
+Because of this transition, you probably wonder that could we deem the Supercloud a next-generation multi-cloud framework? Or, should we treat it as an enhanced **Distributed Cloud**? Well, in my humble opinion, it is neither the multi-cloud nor Distributed Cloud, it is both instead. That is to say, ++it shall be recognised as a multi-cloud based Distributed Cloud architecture++.
 
-- Each Transit Gateway has four Transit Gateway Route Tables which aka VRFs :grin:.
-- Cross-region communications are via Transit Gateway Peerings.
+## <span class="fontColorH2">Representatives</span>
 
-When transforming to the Cloud WAN architecture, it looks quite similar to the Transit Gateway one; however, there are a few of differences in between.
+Although the Supercloud architecture does not belong to any specific cloud model, it is presented through the IaaS or SaaS manner.
 
-![Cloud WAN Topology](https://i.imgur.com/wBFUpsk.png)
+### <span class="fontColorH3">Aviatrix: Air Space and CoPilot, IaaS</span>
 
-1. The role and capability of Core Network Edge or CNE is typically identical to Transit Gateway; the only difference is that ++all the CNEs within the Cloud WAN core network automatically link with each other by nature++. When turning to Transit Gateway, you need to manually create the Transit Gateway Peering for cross-region communications instead.
+For those who have not known [Aviatrix](https://aviatrix.com/cloud-network-platform/), here is a high-level introduction.
 
-<p>
-    
-:::spoiler <span class="fontColor2">:bulb:Transit Gateway Route Table Attachment</span>
+> *The pioneer of Intelligent Cloud Networking™, optimizes business-critical application availability, performance, security, and cost with multicloud networking software that delivers a simplified and ++consistent enterprise-grade operational model in and across cloud service providers++*.
 
-As the following screenshots, all kinds of the attachments, e.g. VPC and Site-to-Site VPN are associated with corresponding Core Network Edges as well as the Transit Gateway model; however, you might be interested in what is the Transit Gateway Route Table attachment?
+What it actually does is be an orchestrator/abstracted layer to concentrate your network transport management across clouds. As the following diagram, every data-plane provision (e.g. Aviatrix Gateways or AWS Transit Gateway) and manipulation (e.g. adjustments of the VPC/VNet Route Table) is fully handled by Aviatrix Controller.
 
-![cloud-wan-attachments](https://i.imgur.com/EidY3Aq.png)
+![Aviatrix Transit Architecture](https://i.imgur.com/YlDNJJz.png)
 
-Typically, ++the Transit Gateway Route Table attachment is equivalent to the Transit Gateway Peering attachment++; create the peering connection and then associate it with the segment. In addition, one thing needs to keep in mind is that ++Direct Connect does not support to directly associate with Core Network Edge yet++; therefore, you need to leverage Transit VIF at this stage.
-    
-![cloud-wan-tgw-peering](https://i.imgur.com/nUx5lUI.png)
-    
-![cloud-wan-attachments-tgw](https://i.imgur.com/KXBnFrt.png)
-:::
+For this reason, the operation team does not need to integrate their deployment pipelines with individual CSPs; additionally, they do not need to login each CSP's console for either seeking where does the compute resource locate across accounts, regions, and landing zones, or observing if anything is abnormal on the transit network.
 
-</p>
+My post [Enhanced Management of Multi-cloud Networking and Security](https://bit.ly/enhanced-management-multicloud-networking-security) has a very deep-dive introduction in why an organisation might need Aviatrix and what are the benefits that an organisation could get from it. It is worth taking a look!
 
-2. Each Cloud WAN segment exactly functions in the same way as Transit Gateway Route Table does; a slight difference in between is that ++you could leverage specified tag set(s) to move any Cloud WAN attachment to another segment++. In my case, I use the key `cloud-wan-segment` as a condition and the value `Development` as a result, that means once this criterion matches, this attachment will be moved to the Development segment. When turning to Transit Gateway Route Table, you need to re-associate the specified attachment instead. From my viewpoint, this feature is extremely handy, especially you do not need to involve any change of the configuration.
+### <span class="fontColorH3">VMware: Cross-Cloud Services, SaaS</span>
 
-![cloud-wan-segment](https://i.imgur.com/Q12IANh.png)
- 
-3. ++A whole Cloud WAN core network could be completely managed via a JSON file by nature and every change is well-recorded (versioning), too.++ When turning to Transit Gateway, it does not have this feature in place, you need to manage it by your own automated framework instead. In terms of the change management, this feature is a significant spotlight of Cloud WAN from my perspective. Because of the versioning, you are able to roll back any change more efficiently; even before you commit any changes, you are able to see the comparion between the current profile and new profile. This convenience lets me recall Cisco IOS-XR and Junos due to that is what they behave :grin:.
+Typically, most organisations adopted VMware vSphere for their compute resources before the concept of the cloud gets popular; therefore, the entire [VMware Cloud](https://www.vmware.com/cloud-solutions.html) offering would be a fascinating choice if they do not really need those comprehensive features each CSP caters.
 
-![cloud-wan-verioning](https://i.imgur.com/YgTdf1e.png)
+![VMware Cross-Cloud Services](https://blogs.vmware.com/cloudprovider/files/2022/09/Picture1.jpg)
 
-![cloud-wan-editor](https://i.imgur.com/GH9cvbb.png)
+As of today, VMware has launched its vSphere stack on Amazon, Microsoft, Google, IBM, Oracle, and Alibaba for catering any preference across CSPs; in other words, you could leverage existing deployment pipelines to manage your virtual machines via vCenter and containers through Tanzu, regardless of which the CSP is. Other than that, both VMware Aria *(formerly vRealize Cloud Management)* and VMware NSX Advanced Load Balancer *(formerly Avi Networks)* adopt the same way as well. ++The VMware Cross-Cloud Services is not a single platform, instead, it is a total solution or even an ecosystem.++
 
-<p>
-    
-:::spoiler <span class="fontColor2">:bulb:My Initial Environment</span>
-```shell=JSON
-{
-  "version": "2021.12",
-  "core-network-configuration": {
-    "vpn-ecmp-support": true,
-    "asn-ranges": [
-      "4200000001-4200000100"
-    ],
-    "edge-locations": [
-      {
-        "location": "ap-southeast-1"
-      },
-      {
-        "location": "ap-northeast-1"
-      }
-    ]
-  },
-  "segments": [
-    {
-      "name": "Shared",
-      "require-attachment-acceptance": true,
-      "allow-filter": [
-        "Production",
-        "Development",
-        "Staging"
-      ]
-    },
-    {
-      "name": "Production",
-      "require-attachment-acceptance": true,
-      "allow-filter": [
-        "Shared"
-      ]
-    },
-    {
-      "name": "Development",
-      "require-attachment-acceptance": true,
-      "allow-filter": [
-        "Shared"
-      ]
-    },
-    {
-      "name": "Staging",
-      "require-attachment-acceptance": true,
-      "allow-filter": [
-        "Shared"
-      ]
-    }
-  ],
-  "segment-actions": [
-    {
-      "action": "create-route",
-      "segment": "Shared",
-      "destination-cidr-blocks": [
-        "0.0.0.0/0"
-      ],
-      "destinations": [
-        "attachment-0123456789abcdefg"
-      ]
-    },
-    {
-      "action": "create-route",
-      "segment": "Production",
-      "destination-cidr-blocks": [
-        "0.0.0.0/0"
-      ],
-      "destinations": [
-        "attachment-0123456789abcdefg"
-      ]
-    }
-  ],
-  "attachment-policies": [
-    {
-      "rule-number": 100,
-      "condition-logic": "and",
-      "conditions": [
-        {
-          "type": "tag-value",
-          "operator": "equals",
-          "key": "cloud-wan-segment",
-          "value": "Production"
-        }
-      ],
-      "action": {
-        "association-method": "tag",
-        "tag-value-of-key": "cloud-wan-segment"
-      }
-    },
-    {
-      "rule-number": 101,
-      "condition-logic": "and",
-      "conditions": [
-        {
-          "type": "tag-value",
-          "operator": "equals",
-          "key": "cloud-wan-segment",
-          "value": "Development"
-        }
-      ],
-      "action": {
-        "association-method": "tag",
-        "tag-value-of-key": "cloud-wan-segment"
-      }
-    },
-    {
-      "rule-number": 102,
-      "condition-logic": "and",
-      "conditions": [
-        {
-          "type": "tag-value",
-          "operator": "equals",
-          "key": "cloud-wan-segment",
-          "value": "Staging"
-        }
-      ],
-      "action": {
-        "association-method": "tag",
-        "tag-value-of-key": "cloud-wan-segment"
-      }
-    },
-    {
-      "rule-number": 103,
-      "condition-logic": "and",
-      "conditions": [
-        {
-          "type": "tag-value",
-          "operator": "equals",
-          "key": "cloud-wan-segment",
-          "value": "Shared"
-        }
-      ],
-      "action": {
-        "association-method": "tag",
-        "tag-value-of-key": "cloud-wan-segment"
-      }
-    }
-  ]
-}
-```
-:::
+My old post [Migrate On-premises Workloads To AWS](https://bit.ly/migrate-onpremises-workloads-to-aws#Conversion-independent) outlines the benefits you could get from VMware Cloud on AWS. Although it is a bit outdated (I released it in 2019), the core concept is still valid; additionally, you could get more information from the YouTube links below;
 
-</p>
-
-4. Other than leverage the Transit Gateway Route Tables, you could also separate various business intentions via more than one Transit Gateways. When turning to the Cloud WAN architecture, ++each region could only have a Core Network Edge within a Cloud WAN core network++. As you see the above architecture diagrams, all the components reside in the Cloud WAN core network; therefore, ++the separation is taken place on the core network++ (well...please ignore Blackhole :sweat_smile:).
-
-![core-network-separation](https://i.imgur.com/dR0HmTF.png)
-
-### <span class="fontColorH3">Anything Else?</span>
-
-Other than above mentioned capabilities, there are additional three differences between Transit Gateway and Cloud WAN.
-
-- **Simpler operations** - for operators who are keen to address the following situations, Cloud WAN is what they seek for;
-    - They are not familiar with managing multi-hierarchies/segments of the network transport.
-    - They aim to streamline the whole Transit Gateway manipulation, e.g., segmentation across a variety of Transit Gateway Route Tables or cross-region routing exchange across a number of Transit Gateway Peerings.
-    - The Network-as-Code is a preferred method for routine operation.
-- **More Agility** - when you want to filter any route entry, what you would perform on Transit Gateway is not to propagate the whole CIDR of the VPC to Transit Gateway Route Table, a more accurate static route instead; in other words, the control takes place on the route-entry level, the import/export cannot be on the segment (Transit Gateway Route Table) level. In terms of Cloud WAN, it supports both ways; ++that is other than the prefix filter, all the segments could be used as the objects for import/export++.
-- **Higher CapEx** - intrinsically, the charge model and pricing are quite close or even identical between Transit Gateway and Cloud WAN except for Core Network Edge. ++Transit Gateway itself is not charged, but each Core Network Edge charges $0.5/hour.++ Imagine that you have 4 Core Network Edges across regions in your environment, that means you need to extra pay $1,440/month without any attachments and data processes when compared with Transit Gateway.
-
-For those reasons, if you are familiar with the whole Transit Gateway manipulation and all the modifications have involved in your automated framework already then Cloud WAN may not able to catch your eyes because of its cost model.
+- Intro: [How VMware Cross-Cloud Services Works](https://www.youtube.com/watch?v=T2vBNKwU0N0)
+- Demo: [Application Transformation](https://www.youtube.com/watch?v=6Gg8dHjh02Q&list=PL9MeVsU0uG66yIItfmR14P3Ti8c7KWuy_&index=31), [Accelerating Cloud Transformation](https://www.youtube.com/watch?v=WgxCSwuDk_c&list=PL9MeVsU0uG66yIItfmR14P3Ti8c7KWuy_&index=32), and [Hybrid Workspace](https://www.youtube.com/watch?v=MT5u7d--B1s&list=PL9MeVsU0uG66yIItfmR14P3Ti8c7KWuy_&index=33)
 
 ## <span class="fontColorH2">Conclusion</span>
 
-For mitigating any unwanted requests toward your service origins as close to the sources (clients) as possible, we typically defend them on the edge (CDN) side. When looking at cloud security on the infrastructure level, both Transit Gateway and Cloud WAN adopt the same strategy as well; the isolation happens on the segments layer instead of the network access layer, e.g. Network Firewall/ACL and Security Group.
+Although the term "Supercloud" is not acceptive across the board and I rarely hear it from the market, I still agree with its principle - distributed and abstracted across clouds. Eventually, every organisation will move to this stage when its business is launched on the multi-cloud architecture.
 
-Why Cloud WAN is more fascinating than Transit Gateway from my viewpoint because it not only hugely simplifies operations but also completes the absences of Transit Gateway. Further, it makes the cloud networking operation close to the traditional MPLS VPN model :grin:.
+In this extremely fast-paced era, how could an organisation augment its business territory more rapidly and operate its environments more efficiently? Consistency is the only answer, it does not matter whether you are a resource consumer or a platform provider.
 
-But, I still have to admit that its overall pricing is not so tasty :sweat_smile:.
-
-> Published on 6^th^ October 2022. 
+> Published on 10^th^ Febuary 2023. 
 
 :::info
-###### tags: `AWS` `Architecture` `NativeCloudNet` `TransitVPC` `TransitGateway` `CloudWAN` `Segmentation`
+###### tags: `Multicloud` `Distributedcloud` `Supercloud` `Aviatrix` `VMwareCloud`
 :::
 
 :::warning
