@@ -98,7 +98,7 @@ Although the term "Supercloud" is not acceptive across the board and I rarely he
 
 In this extremely fast-paced era, how could an organisation augment its business territory more rapidly and operate its environments more efficiently? Consistency is the only answer, it does not matter whether you are a resource consumer or a platform provider.
 
-> Published on 10^th^ Febuary 2023. 
+> Published on 9^th^ Febuary 2023. 
 
 :::info
 ###### tags: `Multicloud` `Distributedcloud` `Supercloud` `Aviatrix` `VMwareCloud`
