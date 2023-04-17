@@ -49,7 +49,7 @@ That is a great question, is not it :sunglasses:? ++Concisely, the traditional i
 
 In the SDI (software-defined infrastructure) world, not all the requests would be handled by the same workflow; three different types of workflow come up accordingly, the control, data, and management planes. In the following scenarios, I will take the data and management planes to elaborate on what a modernised landing zone looks like.
 
-### <span class="fontColorH3">Internet Access: Origin Visibility</span>
+### <span class="fontColorH3">Internet Access: Origin Exposure</span>
 
 We all know that there are two types of origin from the CDN aspect: static and dynamic content.
 
@@ -72,7 +72,7 @@ The primary benefit we could get from this manner has two if compared with the 3
 - ++The S3 bucket keeps private only++, meaning the origin is invisible from the Internet (the bucket must expose to the Internet for any 3^rd^ party vendor communicating with).
 - You could still benefit from all the enhancements by CloudFront due to ++the communication between S3 and CloudFront is well-defined and well-protected on the resource level via the bucket policy++ (it is not straightforward to manage where the 3^rd^ party vendors come from).
 
-### <span class="fontColorH3">Internal Access: VPC Endpoints</span>
+### <span class="fontColorH3">Internal Access: VPC Endpoint</span>
 
 When we turn to the internal environment, every Internet access must pass through the NAT process. However, it does not mean that every AWS public service adopts the same way; there are two exceptions, ++DynamoDB++ and ++S3++. Both DynamoDB and S3 could be accessed by way of the VPC Gateway Endpoint without involving address translation; all the resources within the VPC are able to access those services via their internal/private address.
 
@@ -115,9 +115,9 @@ You ++neither need to maintain any extra key pair++ nor operate any additional r
 
 As I mentioned at the outset, every landing zone could not inherit the traditional infrastructure criterion to design and implement due to their emphasis is totally diverse. Every landing zone acts as not only just a fundamental but also crucial role to support business to function with maximum flexibility and minimum security compromise.
 
-If we look at Origin visibility, VPC Endpoints, segmentation, or Session Manager as an individual enhancement, then you perhaps ask yourself "Should I need them?"; however, whilst we take those enhancements into the same picture, then the outcome is absolutely different.
+If we look at origin exposure, VPC Endpoint, segmentation, or Session Manager as an individual, then you perhaps ask yourself "Should I need them?"; however, whilst we take those enhancements into the same territory, then the outcome is absolutely different.
 
-> Published on 17^th^ April 2023. 
+> Published on 17^th^ April 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
 
 :::info
 ###### tags: `AWS` `Architecture` `Security` `CloudFront` `VPCEndpoint` `Segmentation` `TransitGateway` `CloudWAN` `SessionManager`
