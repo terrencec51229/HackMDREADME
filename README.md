@@ -29,98 +29,80 @@ table th:nth-of-type(3) {
 }
 </style>
 
-# A Modernised Landing Zone Design Rather Than Just About Reachability
+# Public Cloud Anywhere - Distributed Cloud
 
 [TOC]
 
-## <span class="fontColorH2">Preface</span>
+## <span class="fontColorH2">Where Is It Comes From
+</span> 
 
-Let us forget anything about the cloud before we get started the subject today. In the past, when we needed to launch any service on top of the IT infrastructure, what we did could be summarised below typically;
+Before we dig into what is Distributed Cloud, let us see two concise explanations first.
 
-- Evaluate how much capacity is required to afford the loading.
-- Consider how to safeguard applications that expose to the Internet with minimum compromise or without compromising the degraded performance.
-- Consider how to govern communications between applications across environments with elasticity and granularity.
+- <span class="fontColorH3">**Gartner**</span>
+    
+    *Distributed cloud is the distribution of public cloud services to <span class="fontColor">different physical locations</span>, while the operation, governance, updates and evolution of the services are the responsibility of <span class="fontColor">the originating public cloud provider</span>.*
 
-When we look at the cloud era nowadays, the first task is completely offloaded to the CSPs, hence it is no longer a concern *(well, the only thing that you definitely need to care about is how to ensure that you will not get surprised when you receive the bill :expressionless:)*. However, the rest of the tasks are still our responsibility. Before considering anything about protection, management, or both, you need to build a place to accommodate those business-critical applications; but, what does the landing zone differ from the on-premises infrastructure design? Because a landing zone is able to deem an SDDC (software-defined data centre) in essence.
+- <span class="fontColorH3">**IBM Cloud**</span>
 
-That is a great question, is not it :sunglasses:? ++Concisely, the traditional infrastructure focuses on reachability; however, the landing zone much focuses on application-driven design.++ What does it mean? The following scenarios will discover more.
+    *Distributed cloud is a public cloud computing service that lets you run public cloud infrastructure in multiple different locations  -  not only on your cloud provider's infrastructure but <span class="fontColor">on premises, in other cloud providers' data centers, or in third-party data centers or colocation centers</span>  -  and manage everything from a single control plane.*
 
-## <span class="fontColorH2">A Modernised Landing Zone</span>
+    *With this targeted, centrally managed distribution of public cloud services, your business can deploy and run applications or individual application components in a mix of cloud locations and environments that best meets your requirements for performance, regulatory compliance, and more. <span class="fontColor">Distributed cloud resolves the operational and management inconsistencies that can occur in hybrid cloud or multicloud environments.</span>*
 
-In the SDI (software-defined infrastructure) world, not all the requests would be handled by the same workflow; three different types of workflow come up accordingly, the control, data, and management planes. In the following scenarios, I will take the data and management planes to elaborate on what a modernised landing zone looks like.
+    *Maybe most important, <span class="fontColor">distributed cloud provides the ideal foundation for edge computing</span> - running servers and applications closer to where data is created.*
 
-### <span class="fontColorH3">Internet Access: Origin Exposure</span>
+In summary, there are three key factors from the abovementioned definitions.
 
-We all know that there are two types of origin from the CDN aspect: static and dynamic content.
+- Distributed Cloud is an extension of the region where the cloud service provider has not launched any service yet.
+- The whole Distributed Cloud framework is completely managed by the cloud service provider nonetheless.
+- One of the use cases for Distributed Cloud is edge computing.
 
-- Static Content - Intrinsically, the output that could be fetched by way of the HTTP GET request belongs to this category, e.g. images (.jpg). In addition, these types of content are cacheable due to they could be gained directly without interacting with applications.
-- Dynamic Content - If the output is fetched by way of several interactions between applications, e.g. HTTP POST, that is to say, it depends on the request then this output belongs to this category, e.g. Web pages (.aspx). Because of this reason, these types of content are not cacheable.
+When we turn to the AWS aspect, the corresponding solution is [Outposts](https://aws.amazon.com/outposts/),  which is designed by the HCI (hyperconverged infrastructure) foundation. According to the abovementioned factors, here is what Outposts can do.
 
-In other words, the dynamic content relies on the compute resources and the static content does not; as a result, that is why each CSP encourages every customer to serve their static content via the object storage, e.g. AWS S3 and GCP Cloud Storage, instead of the block storage. This adoption is not only about the requirement but also about cost optimisation.
+- Outposts could be delivered to any place where meets [its requirement](https://docs.aws.amazon.com/outposts/latest/userguide/outposts-requirements.html).
+- Outposts is a fully managed offering, which operates by a unified console as well as other services.
+- Since Outposts could be delivered everywhere, hence you could locate it at any place where is close to clients.
 
-CDN is an Internet-face service, meaning every origin must be exposed to the Internet; however, from the security standpoint, every exposure is risky. For this reason, we normally add additional logic on the CDN and origin side for enhancement.
+## <span class="fontColorH2">What Does It Differ From Edge Computing</span>
 
-- The first gate - When the CDN receives the request without any authorised HTTP header, this request would be dropped.
-- The second gate - When the request passes the inspection by CDN, the CDN adds one or more additional HTTP headers; when the origin receives the request comes from CDN without those HTTP headers, this request would be dropped as well.
+As mentioned, edge computing is one of the use cases of Distributed Cloud; however, it does not mean that Distributed Cloud is completely designed for it. That is because Distributed Cloud also takes several non-technical drivers into account, for instance;
 
-**But, what if exposure is not required?** It would be great from the security standpoint. Luckily, it is feasible when S3 collaborates with CloudFront via [OAI (origin access identity)](https://aws.amazon.com/blogs/networking-and-content-delivery/amazon-cloudfront-introduces-origin-access-control-oac/) or [OAC (origin access control)](https://aws.amazon.com/blogs/networking-and-content-delivery/amazon-cloudfront-introduces-origin-access-control-oac/).
+- The regions where the cloud service provider launches do not meet the organisation's compliance requirement, e.g., our business is restricted to be served in the US region.
+- All the organisation's assets must be stored in the visible stuff, e.g., our data have to be stored in the physical and dedicated hardware.
 
-![Internet Access](https://i.imgur.com/3owyJiQ.jpg)
+### <span class="fontColorH3">Public Cloud Accelerates Edge Computing</span>
 
-The primary benefit we could get from this manner has two if compared with the 3^rd^ party vendors;
+Before the public cloud becomes popular, what is the primary requirement if an organisation wants to broaden its business in different regions? The answer is quite straightforward to imagine - to build several physical infrastructure sites. However, it has a dependency on how much budget the organisation is willing to invest.
 
-- ++The S3 bucket keeps private only++, meaning the origin is invisible from the Internet (the bucket must expose to the Internet for any 3^rd^ party vendor communicating with).
-- You could still benefit from all the enhancements by CloudFront due to ++the communication between S3 and CloudFront is well-defined and well-protected on the resource level via the bucket policy++ (it is not straightforward to manage where the 3^rd^ party vendors come from).
+After the public cloud grew up, the organisation no longer needs to build any physical site to support its business growth; instead, it just needs to launch any service they want in any region where is close to their clients. The organisation could even adopt trial-and-error without a strict plan. As a result, the public cloud could be deemed a prototype of edge computing; in other words, it gives a space for any organisation re-imagining its business territory.
 
-### <span class="fontColorH3">Internal Access: VPC Endpoint</span>
+### <span class="fontColorH3">AWS Anywhere</span>
 
-When we turn to the internal environment, every Internet access must pass through the NAT process. However, it does not mean that every AWS public service adopts the same way; there are two exceptions, ++DynamoDB++ and ++S3++. Both DynamoDB and S3 could be accessed by way of the VPC Gateway Endpoint without involving address translation; all the resources within the VPC are able to access those services via their internal/private address.
+When more and more organisations embrace the public cloud, human nature comes up accordingly due to some organisations are not satisfied by the regions each cloud service provider offers. They want more!
 
-But, not every service could be accessed publicly due to they have not been exposed outside of the AWS world and they will not, either. For instance, KMS, Session Manager, and System Manager. In order to reach those services which cannot communicate directly, the VPC Interface Endpoint is required.
+For instance, if an organisation wants to broaden its business in Taiwan, but the closest region is Hong Kong, where is out of their consideration due to it does not meet the compliance requirement. What an organization can do? Nothing, unfortunately.
 
-![Application-driven Networking](https://i.imgur.com/o9lVX9Z.jpg)
+Before AWS released Outposts, every organisation was restricted to broaden its business according to the regions where AWS launches. Luckily, once AWS released Outposts, most technical/non-technical boundaries have been cleared.
 
-The primary difference between the endpoints could be summarised below.
+![Public Cloud Anywhere via Outposts](https://i.imgur.com/l2VNLTV.png)
 
-- ++The Gateway Endpoint needs to be associated with the VPC Route Table++, but the Interface Endpoint does not.
-- ++The Interface Endpoint is able to customise the access control++, e.g. service policy and Security Group, but the Gateway Endpoint is not.
+Nowadays, CDN is not only just for content delivery (cache) but also content distribution (process); therefore, most CDN providers have involved their business portfolio in the edge computing market. [Akamai EdgeWorkers](https://techdocs.akamai.com/edgeworkers/docs/event-handler-functions) and [Cloudflare Workers](https://developers.cloudflare.com/workers/learning/how-workers-works/) are one of the examples. 
 
-Most importantly, what is the message that the VPC Endpoint would like to share with us? That is to say, ++[every solution architecture must be application-aware](https://www.linkedin.com/posts/terrencec51229_a-new-role-for-network-pros-application-flow-activity-7026120850051407872-ZsQg?utm_source=share&utm_medium=member_desktop)++ due to one of the significant differentiators between on-premises and cloud is not everything is reachable on the cloud by default, require additional settings instead, e.g. adaptor (VPC Endpoint) or permission (IAM Policy); as a result, reachability is not a foundation anymore.
+When we turn to AWS specifically, or even from the multi-CDN viewpoint, the implementation could be below;
+- For applications that are able to launch on either the [Lambda@Edge](https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html) or the 3^rd^ party solutions, e.g. Akamai EdgeWorkers or Cloudflare Worker, you could be benefited that the local requests are locally served, powered by either CloudFront or the 3^rd^ party vendors.
+- For applications that are not able to launch on the abovementioned platforms, you could still leverage their private high-speed transport backbone to optimise every end-to-end request process that is served by compute resources in Outposts.
 
-This point not only reflects the changes across technologies but also notices that our responsiblity enlarges due to the infrastructure design closely works in conjuction with the application functionality in a modern development framework.
+![Public Cloud Anywhere via Outposts with CDN](https://i.imgur.com/wR770KB.png)
 
-### <span class="fontColorH3">Multi-site Access: Segmentation</span>
+Apparently, this comprehensive model redefines the boundary, no matter from the infrastructure or the business perspective.
 
-Unlike the on-premises environment where everything is put together,  which is caused by several factors, e.g. facility location and resource capacity, a system architecture on the cloud is typically composed of more than single one landing zone, e.g., the infrastructure components are deployed in zone 1, the application components are deployed in zone 2, and the security components are deployed in zone 3. This partition does not complicate the architectural design, instead, it gives more granularity and elasticity, especially from the ownership perspective.
+## <span class="fontColorH2">Conclusion</span>
 
-Essentially, you shall not anticipate that any workload that resides in either the development or the staging environment is able to communicate with any service in the production environment. However, rely on the Network ACL and Security Group to grant access that could be optimised. ++Another gate that is worth considering is segmentation, to categorise the type of traffic.++ In order to accomplish traffic categorisation, you could leverage either the Transit Gateway Route Table or the Cloud WAN Segment; the adoption depends on which service (Transit Gateway or Cloud WAN) you use for bridging all the environments together. You could see more in-depth comparisons between Transit Gateway and Cloud WAN in my post - [Globally Operate Your Network Transport via Cloud WAN](/-lcMon2oQoKVp_C3z6xMaw).
+Nowadays, we have benefited from each public cloud provider due to plenty of agility and elasticity; one of them is a prototype of edge computing. Obviously, we all are greedy and  want more; therefore, the Public Cloud Anyware idea comes up, which gives us a way to unlock the business boundary.
 
-![Transit Gateway Topology](https://i.imgur.com/tls7k9l.png)
-
-![Cloud WAN Topology](https://i.imgur.com/wBFUpsk.png)
-
-++Segmentation is just the outset due to it is a prerequisite of traffic inspection, which is a key piece of secure cloud networking.++ Every communication, no matter the east-west or the south-north access, would be inspected by the security appliance which could be either the Network Firewall or the 3^rd^ party software. You could even leverage the Security Group to form more granular and tiered access management.
-
-![Multi-site Access](https://i.imgur.com/LMIaAnV.jpg)
-
-### <span class="fontColorH3">Out-of-band: Session Manager</span>
-
-In order to ensure that every underlying infrastructure component is manageable, typically, we would design a completely isolated network instead of operating them via service network, which is also shared with applications. This design gives us a back door to investigate what is happening whenever the service network malfunctions. When we turn to the cloud world, every remote access relies on either a dedicated connection (Direct Connect) or the Internet, and these ingredients belong to the service network in essence; that is to say, you will not be able to operate resources if they are being either maintained or malfunctioned. **Is any way to touch the environment without integrating any abovementioned feature?** Yes, that is Session Manager.
-
-![OOB](https://i.imgur.com/60GJBY6.jpg)
-
-You ++neither need to maintain any extra key pair++ nor operate any additional resource that Session Manager governs. The only thing you need to do is just connect your resource, which is the EC2 instance in particular, via Session Manager. In addition, another security optimisation is that ++none of the service ports, e.g. RDP and SSH, is required to open due to the communication between the EC2 instance and Session Manager is behind the scenes++. Pretty straightforward, is not it :sunglasses:?
-
-## <span class="fontColorH2">Wrap-up</span>
-
-As I mentioned at the outset, every landing zone could not inherit the traditional infrastructure criterion to design and implement due to their emphasis is totally diverse. Every landing zone acts as not only just a fundamental but also crucial role to support business to function with maximum flexibility and minimum security compromise.
-
-If we look at origin exposure, VPC Endpoint, segmentation, or Session Manager as an individual, then you perhaps ask yourself "Should I need them?"; however, whilst we take those enhancements into the same territory, then the outcome is absolutely different.
-
-> Published on 17^th^ April 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
+> Published on 7^th^ August 2021.
 
 :::info
-###### tags: `AWS` `Architecture` `Security` `CloudFront` `VPCEndpoint` `Segmentation` `TransitGateway` `CloudWAN` `SessionManager`
+###### tags: `AWS` `Architecture` `HybridCloud` `EdgeCompute` `Outposts`
 :::
 
 :::warning
