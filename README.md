@@ -31,96 +31,91 @@ table th:nth-of-type(3) {
 
 [TOC]
 
-## <span class="fontColorH2">*Before We Get Started...*</span>
+<span class="fontColor2">*Leased line or IPSec VPN? These two terminologies always arise when you want to bridge two locations. In this cloud-massive era, IPSec VPN could still be easily deployed in any architecture because what it needs in essence is the Internet; however, when we turn to the leased line, what we could do since we have nothing in the on-premises?*</span>
 
-Is access leak easy to penetrate in my environment? The answer is **Yes** without any doubt. Therefore, another question may arise in your mind: if it really is a spotlight that is worth keeping an eye on, why did I not adopt any reaction in the past accordingly? The answer is **cloud**.
+# <span class="fontColorH2">*How Did We Adopt In The Past?*</span>
 
-Before cloud adoption gets popular, every entry point of access is well-defined by either Security or the well-trained operation team.
+Leased line or IPSec VPN? The adoption primarily depends on one of the following factors, some of them, or even all of them if technologies are met, e.g. protocol/feature:
 
-- All kinds of management accesses, e.g. HTTP or SSH, could only be granted from specific sources, no matter the request is initialised from either the internal environment or the Internet.
-- In addition, all bidirectional communications must be passed through the peripheral appliance, e.g. firewall.
+- **Permanent/temporary use** - If the scenario is a PoC, you typically would not prefer ordering a dedicated circuit to verify your requirement from either the schedule aspect, the cost aspect, or both. However, if the scenario is opposite, which means it is a production environment, the Internet-based VPN typically is not the first priority for consideration.
+- **With/without SLA** - Not every case you would need a commercial agreement to safeguard your business even if the scenario is a production environment in that the requirement highly depends on what is the magnitude of the service.
+- **Cost** - Every solution, no matter it is open-source-based or commercial-based, could be divided into two pieces: CapEx and OpEx. The CapEx primarily focuses on how much budget I need to scope and how much expenditure I need to pay. The OpEx primarily emphasises what needs to beware if leveraging any existing resource, e.g. capacity or reliability.
 
-Obviously, there are not too many ways to accidentally expose your services with unwanted profiles. However, what happened after cloud adoption had explosive growth? We all understand one of the cloud essentials is convenience, because of this strength, developers no longer require collaborating with the infrastructure team to publish their ideas over the world, they could do everything they want by themselves completely. On the other hand, this convenience results in unnecessary exposure. When we turn to the previous scenarios, they would look like below:
+When we turn to technical requirements, e.g., do we have sufficient infrastructure resources to deliver (router/switch/firewall), do those resources have sufficient licenses to support (BGP/GRE/IPSec), we typically do not concern them too much because they are easily qualified by the existing environment.
 
-- Developers accidentally expose their resources, including databases, to the Internet directly.
-- Developers accidentally expose not only the front-end data plane but also the back-end management plane to the Internet.
-- Developers accidentally grant all the sources, including unknown ones, to communicate with their resources.
+But, what could we do for the leased line in the cloud world?
 
-<u>Last but not least, developers have not been aware of those anomalies</u> (that is not their fault in essence due to their primary focus is development instead of operation), therefore, some unexpected security events took place afterwards, e.g. **ransom attack**.
+# <span class="fontColorH2">*Is Anything Changed Nowadays?*</span>
 
-## <span class="fontColorH2">*What Do You Need To Take Care Of*</span>
+Intrinsically, you do not need to panic because the leased line architecture is still out there, it just functions differently. If so, you may be interested in what are the discrepancies between the eras. [Software-defined Cloud Interconnect (SDCI)](https://www.gartner.com/reviews/market/software-defined-cloud-interconnects-sdci) is the answer. The SDCI architecture provides a more agile, flexible, and modernised model to link up with any CSP environment. Compared with the traditional leased line model, the SDCI architecture has the following spotlights:
 
-A well-protected framework does not mean blocking everything, instead, <u>every access is enforced with the least privilege principle</u>. The whole framework could be narrowed down to the following categories from my perspective:
+- **Self-provisioning** - In the past, you were able to follow up all the tasks on your side until the circuit was delivered; typically, the lead time took around 2-4 weeks. Based on the SDCI framework, nothing needs to be waited because everything could be manipulated by yourself. What you need to do basically is, choose the PoP where is close to your business and the required capacity, feed the credentials from the CSP you specified, and deploy. You could even integrate the existing deployment pipeline with the SDCI platform to achieve the infrastructure-as-code (IaC) principle. 
+- **Commitment-free** - In the past, one of the key factors in the order process was bandwidth commitment, which meant you had to pay for the bandwidth you did not completely consume. The charge model of each SDCI component is subscription-based as well as those CSPs and SaaS vendors; you would only need to pay for how many resources you actually consume. 
+- **Carrier-neutral** - Before Google announced its [Cross-Cloud Interconnect](https://cloud.google.com/blog/products/networking/announcing-google-cloud-cross-cloud-interconnect) offering, there was no way to bridge various clouds via a single cloud solution because each of them is proprietary. However, the SDCI framework crosses this boundary; it acts as an octopus that is capable of integrating every cloud with it simultaneously.
 
-- **Configuration review** aims to verify if any setup does not follow either standard practices or best practices.
-- **Workload segmentation** aims to categorise all the resources into more granular groups and formulate different sets of communication boundary.
-- **Privilege management** aims to ensure that every resource could only be manipulated by a limit of users or service roles with the least required permission.
+Therefore, let us look at [Megaport](https://www.megaport.com/services/) who is one of the well-known SDCI solution providers in the market.
 
-### <span class="fontColorH3">*Configuration Review*</span>
+# <span class="fontColorH2">*Solutions Outline*</span>
 
-In terms of reviewing your configuration on AWS, the most efficient way is leveraging [Security Hub](https://www.youtube.com/watch?v=oBac-GAoZJ8), a [cloud security posture management (CSPM)](https://www.youtube.com/watch?v=V4wmb5KVmKM) service that automates best practice checks, aggregates alerts, and supports automated remediation. The following demo gives you a high-level overview of what Security Hub does.
+Leveraging either the CSP-managed VPN service or the 3^rd^ party firewall instance-based VPN to bridge the clouds is not really a concern if you do not have too many sites; however, it would be tedious and overwhelming once you have tons of environments that need to be managed. In the era of everything seeking out efficiency and as-code gives Megaport an opportunity to demonstrate its capability which is composed of three key offerings: **Port**, **MCR**, and **MVE**.
 
-1. Choose the Security standards that meet your requirement.
-2. Security Hub will summarise all the findings and present those details once the collection process completes.
+## <span class="fontColorH3">*Hybrid Cloud*</span>
 
-![security hub](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/t5ynd10k1nhsyi3aayzb.gif)
+<u>[Port](https://www.megaport.com/services/cloud-connectivity/) is delivered as a physical circuit that is capable of linking multiple clouds.</u> As a matter of fact, this offering is quite common, especially from the NSP's aspect, e.g. [PCCW](https://www.consoleconnect.com/services/layer-2/), [Equinix](https://www.equinix.com/products/digital-infrastructure-services/equinix-fabric), hence I do not want to dig it too much detailed.
 
-Essentially, Security Hub is to provide a set of security definitions instead of detecting and remediating any anomaly; these functions are handled by [Config](https://www.youtube.com/watch?v=MJDuAvNEv64) instead, a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. As a result, enabling any of the Security Hub's security standards will automatically deploy the corresponding rules to Config.
+![Port](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sqxz9i2snalzwolytcn8.png)
 
-![config rules](https://hackmd.io/_uploads/Sy2nTe4K3.png)
+## <span class="fontColorH3">*Cloud-to-Cloud*</span>
 
-However, one thing needs to keep in mind is that <u>Config is disabled (off) by default</u>, it could not detect, collect, and remediate constantly until its status is enabled (on).
+<u>[MCR (Megaport Cloud Router)](https://www.megaport.com/services/megaport-cloud-router/) functions as a concentrated exchange point that is capable of managing the routing across multiple clouds.</u> Unlike Port adopts the layer-2 design to bridge the on-premises with the clouds (the routing relies on the network infrastructure in on-premises), MCR adopts the layer-3 design for every cloud-to-cloud scenario (the routing is totally handled by itself); for this reason, you could construct a hub-spoke transport architecture on either per-region, per-cloud, or even both basis.
 
-![config recorder](https://hackmd.io/_uploads/SJ1daxVKn.png)
+![MCR](https://docs.megaport.com/mcr/img/multicloud.png)
 
-Those predefined rules may not 100% meet your requirement, hence customisation is required. The following demo presents that a manual remediation rule is launched to inspect if any unauthorised source is detected. Every change made by Config, no matter automatically or manually, would be recorded by CloudTrail as well.
+Let us slow down our pace for a while. You are probably aware of one single term - **VXC (Virtual Cross Connect)** because it is associated with both Port and MCR. Actually, VXC is what we are looking for the leased line in the cloud world. <u>Each VXC represents a connector of the destination</u>, e.g. Amazon, Microsoft, or Google. In addition, each VXC could not function without associating with Megaport's services; otherwise, it is just an object.
 
-![config](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/frr8uz26tgq8y587caa3.gif)
+![MCCA via Megaport](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1lghtty0pzbo24un93gg.png)
 
-### <span class="fontColorH3">*Workload Segmentation*</span>
+You are probably curious about how could each VXC be deemed a leased line? The answer is quite straightforward because every single VXC behind the scenes is a CSP-managed interconnect resource, e.g. AWS Direct Connect, Azure ExpressRoute, or GCP Cloud Interconnect. The only discrepancy is that you are not responsible for operating any network infrastructure in on-premises, Megaport takes over this ownership.
 
-I emphasised how the importance of segmentation in my previous post [A Modernised Landing Zone Design Rather Than Just About Reachability](https://bit.ly/modernised-landing-zone-design-rather-than-just-about-reachability#Multi-site-Access-Segmentation), however, a robust security design not only consider the site segments but also the workload segments. Every workload segment could be easily accomplished via Security Group.
+### <span class="fontColorH4">*Technical Deep-dive*</span>
 
-Everyone knows that each Security Group is responsible for access control by its nature, but what it does is more than that! When we look at the best practice principle, each component shall have its own Security Group. If a Security Group is either associated or shared with multiple resources then these resources belong to the same segment. In addition, you shall avoid using the IP address to manage your access, the self-referencing rule instead (Security Group over Security Group, or nested Security Group), which gives you a more granular and flexible way to authorise every communication.
+I observed one thing that is worth keeping in mind during the PoC is how BGP Prefix Filter works on MCR because it functions differently when compared with how BGP behaves in general.
 
-![security group](https://hackmd.io/_uploads/SkQOLztY3.png)
+![BGP Prefix Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/mp4iim1ni6a2dfxprt5b.png)
 
-The benefit you could get from the self-referencing rule architecture especially when the resource scales by the auto-scaling group due to the IP address allocation is floating in this manner. The IP address shall only be considered in the following scenarios:
+Import Prefix Filter does not mean which prefix is received from your BGP peer is allowed to feed into your route table, instead, <u>it means which CIDR of the VPC/VNet is associated with this BGP connection</u>. As you see from my PoC architecture, there are two CIDRs (_10.150.16.0/20_, _10.150.224.0/20_) from my AWS account. From MCR's aspect, those two prefixes must be allowed to import, otherwise, you will not see any prefix in the Received section.
 
-- <u>The health-check request initialises from the Network Load Balancer (NLB) subnet(s)</u>
-- <u>Any out-of-VPC communications, e.g. Internet or inter-VPC.</u>
+![PoC](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qv2w40onas9riiiewbvg.png)
 
-Other than manipulating Security Groups to manage segments, you could also consider leveraging the 3^rd^ party software to streamline your operation.
+![Import Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/lcgvl4h06pqumektzd95.png)
 
-- [Aviatrix - Distributed Cloud Firewall](https://aviatrix.com/resources/distributedcloudfirewall/webinar-distributed-cloud-firewall-reduce-cloud-infrastructure-costs-and-improve-cloud-security), an agentless solution that provides an orchestration layer to simplify every access rule's change. My previous post [Enhanced Management of Multi-cloud Networking and Security](https://bit.ly/enhanced-management-multicloud-networking-security) introduced why Aviatrix is worth considering and what are the benefits that an organisation could get from it as well.
+Export Prefix Filter does not mean which origin prefix you want to advertise to your BGP peer, instead, <u>it means which prefix you receive from your BGP peer is allowed to propagate; in other words, which prefix is able to transit over this BGP connection</u>. Looking at my PoC architecture again, there is a single CIDR (_10.160.224.0/20_) from my Azure account. From MCR's aspect, this prefix must be allowed to export, otherwise, you will not see any prefix in the Advertised section; in other words, you will not any prefix in your VPC/VNet Route Table, either.
 
-![Aviatrix - Distributed Cloud Firewall](https://aviatrix.com/wp-content/uploads/2023/05/DCF-images.png)
+![Export Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/o01cl5myk8r4gr091ofn.png)
 
-- [Illumio - Illumio Core](https://www.illumio.com/resource-center/illumio-core-demo), an agent-based solution that could decouple each service group into a more granular slice (micro-segment). Illumio also highly advocates why Zero Trust Segmentation matters, especially from the aspect of preventing ransom attacks.
+## <span class="fontColorH3">*Enhanced SD-WAN*</span>
 
-![Illumio - Illumio Core](https://hackmd.io/_uploads/HJVlBtot3.png)
+[MVE (Megaport Virtual Edge)](https://www.megaport.com/services/megaport-virtual-edge/) is based on the SD-WAN foundation to provide an optimised path between the on-premises and the CSP/SaaS platforms; in other words, MVE has a prerequisite of [supported vendor platforms](https://docs.megaport.com/mve/).
 
-### <span class="fontColorH3">*Privilege Management*</span>
+![MVE](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yj8248wkwk895mqb4nnk.png)
 
-We already talked about remediation and segmentation, let us move on to delegation. Obviously, IAM acts as a key factor in this section; however, it could only apply to AWS correlatives, e.g. IAM users or service profiles. If the OS layer is handled by an organisation and the organisation has leveraged Active Directory to manage user and service identities then implementing Group Policies would be the most efficient approach.
+You may wonder why Megaport is able to optimise the network path for SaaS platforms via MVE? The answer is composed of two pieces: 
 
-When we look at the whole privilege management framework, it primarily focuses on access and identity management from my perspective.
+- First of all, the Megaport-managed network backbone, which is close to the colocations/datacentres where those CSPs locate. This factor is a prerequisite for most SD-WAN solution providers in the market under the hood.
+- Secondly, a comprehensive ecosystem from Megaport Marketplace, the most decisive factor from my perspective. Every certified service provider could be represented by a VXC and associated with MVE.
 
-- In terms of privileged access management, its principle intrinsically is **zero-trust**, none of the users is able to manipulate any resource directly; instead, all the manipulations are by way of a managed orchestration layer, which minimises unnecessary exposure, e.g., several unknown communications caused by a malicious process inside an installed package.
-- In terms of privileged identity management, it covers permission and credentials. Which user could manipulate which resources without needing any firewall between them; in addition, none of the resource credentials could be used directly, instead, every authorised user would be given a temporary key to manipulate. This bundle of the role-based access control (RBAC) foundation and the vault protection enhancement could minimise the risk effectively if credentials were revealed accidentally.
+Apparently, since everything is under Megaport's umbrella, the user experience could be eminently optimised.
 
-This [resource](https://www.wallix.com/blog/what-is-pam-privileged-access-management/) outlines a full picture of what privilege management looks like.
+# <span class="fontColorH2">*Wrap-up*</span>
 
-![pam](https://hackmd.io/_uploads/S1L570xc2.png)
+One of the reasons why Megaport's offerings are fascinating is its highly elastic design from my perspective. Each service on the bottom could be represented by a VXC and each VXC could be associated with either Port, MCR, or MVE. Imagine that we are in the Lego world, every tier (VXC, Port, MCR, and MVE) could be deemed the Lego blocks, and what those blocks will present that depending on your imagination (requirement).
 
-## <span class="fontColorH2">*Let Us Wrap Up!*</span>
+![VXC Types](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4t4fkwwh55ymhujf0iak.png)
 
-In the past 5 years or even a decade, we could trust that our business was well-safeguarded by the anti-virus and anti-malware software; however, this methodology is no longer enough at all nowadays due to attacks keep innovating as well as technologies. Additionally, because of the maturity and popularity of cloud adoption, everyone has the chance to fulfil their ideas without too many engagements across teams; that is to say, they even could complete everything by themselves. But, when everything becomes too easy and convenient, it sometimes gives us a heads-up that something may need your attention, which is security in most cases.
-
-<u>Everyone needs to care and is responsible for security in this fast-paced generation</u>; more accurately, everyone has to always bear security in mind due to <u>anything that cannot be seen does not mean that it does not exist</u>, it is just because this trick-or-treat is patiently waiting for your carelessness. No one wants to get shocked, does not it?
+Although one of the transitions in the cloud era is <u>the Internet is a new network</u>, when we take either the business drivers (e.g. SLA) or the operational concerns (e.g. security) into account, the SDCI solutions are worth evaluating and embracing for your modernised service framework nonetheless.
 
 :::info
-:date: Published on 17^th^ July 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
+:date: Published on 6^th^ September 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
 :::
 
 :::warning
