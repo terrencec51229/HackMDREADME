@@ -31,91 +31,45 @@ table th:nth-of-type(3) {
 
 [TOC]
 
-<span class="fontColor2">*Leased line or IPSec VPN? These two terminologies always arise when you want to bridge two locations. In this cloud-massive era, IPSec VPN could still be easily deployed in any architecture because what it needs in essence is the Internet; however, when we turn to the leased line, what we could do since we have nothing in the on-premises?*</span>
+<span class="fontColor2">*For most organisations, one of the intentions to kick off their cloud journey is to get rid of maintaining any underlying infrastructure component entirely due to a variety of considerations, for instance, tedious hardware lifecycle and different technology focus. However, does that mean the host-based cloud platform could not present any value to organisations? Not at all! Because everything depends on the use case nonetheless.*</span>
 
-# <span class="fontColorH2">*How Did We Adopt In The Past?*</span>
+# <span class="fontColorH2">*Before We Jump Into The Topic...*</span>
 
-Leased line or IPSec VPN? The adoption primarily depends on one of the following factors, some of them, or even all of them if technologies are met, e.g. protocol/feature:
+Because of agility and elasticity, most organisations get started on their cloud journey and get involved in the whole cloud ecosystem widely. Other than those factors, the most fascinating point is the pay-as-you-go model which gives organisations another way to stretch their service capacity for supporting any short-period/temporary situation without investing in traditional infrastructure as they used to. Everything looks quite rational, doesn't it? However, one key sometimes is missed from the outset - <u>Which framework will you adopt for either cloud extension or cloud migration? **Rehost**, **Replatform**, or **Refactor**?</u>
 
-- **Permanent/temporary use** - If the scenario is a PoC, you typically would not prefer ordering a dedicated circuit to verify your requirement from either the schedule aspect, the cost aspect, or both. However, if the scenario is opposite, which means it is a production environment, the Internet-based VPN typically is not the first priority for consideration.
-- **With/without SLA** - Not every case you would need a commercial agreement to safeguard your business even if the scenario is a production environment in that the requirement highly depends on what is the magnitude of the service.
-- **Cost** - Every solution, no matter it is open-source-based or commercial-based, could be divided into two pieces: CapEx and OpEx. The CapEx primarily focuses on how much budget I need to scope and how much expenditure I need to pay. The OpEx primarily emphasises what needs to beware if leveraging any existing resource, e.g. capacity or reliability.
+We have heard that embracing the cloud is an inevitable trend quite often, however, the influence it makes is more than just a trend. <u>The whole cloud ecosystem not only breaks the traditional boundaries (roles and responsibilities) but also forms a brand-new working model.</u> This new norm changes each technical team's ownership significantly because each of them is able to provision resources, grant accesses, expose services, and even more without involving other teams as they used to. But, this transition also forms inconsistency and confusion which could potentially result in several side effects, for instance, increasing operational difficulty and unwanted spending, especially when the organisation is a large-scale enterprise.
 
-When we turn to technical requirements, e.g., do we have sufficient infrastructure resources to deliver (router/switch/firewall), do those resources have sufficient licenses to support (BGP/GRE/IPSec), we typically do not concern them too much because they are easily qualified by the existing environment.
+From the above-mentioned situations, we are able to correlate them with an extremely prominent concern: <u>Do we just want to launch/move every single workload to the cloud without too many changes? Or, are we keen to refactor the service framework completely?</u>
 
-But, what could we do for the leased line in the cloud world?
+# <span class="fontColorH2">*Is Anything Discrepant in Cost Across A Decade?*</span>
 
-# <span class="fontColorH2">*Is Anything Changed Nowadays?*</span>
+From my personal perspective, moving to the cloud could **not** be just for reducing whatever cost because this is a tremendous misunderstanding if you put "cloud is cheap" into your mindset. If it really is, <u>why does the FinOps principle come into play?</u>
 
-Intrinsically, you do not need to panic because the leased line architecture is still out there, it just functions differently. If so, you may be interested in what are the discrepancies between the eras. [Software-defined Cloud Interconnect (SDCI)](https://www.gartner.com/reviews/market/software-defined-cloud-interconnects-sdci) is the answer. The SDCI architecture provides a more agile, flexible, and modernised model to link up with any CSP environment. Compared with the traditional leased line model, the SDCI architecture has the following spotlights:
+However, human nature is an interesting evolution, especially in the cloud era. When we go back to the era of operating everything by ourselves, we pay for the hardware and software lifecycle annually; in other words, we only need to debate the payment once. Because of this reason, we are not regularly chased up by the expenditure until the next cycle comes. The story could be totally different on the cloud albeit we keep the same cost unchanged. Why? What happens? <u>**The bill!** You are able to monitor every cost generated by each deployment on a daily basis</u> and feel shocked about either invisible spending, unexpected consumption, or even both. Because of this transparency, most organisations are keen to reduce the whole spending before they decide to move on to the next stage.
 
-- **Self-provisioning** - In the past, you were able to follow up all the tasks on your side until the circuit was delivered; typically, the lead time took around 2-4 weeks. Based on the SDCI framework, nothing needs to be waited because everything could be manipulated by yourself. What you need to do basically is, choose the PoP where is close to your business and the required capacity, feed the credentials from the CSP you specified, and deploy. You could even integrate the existing deployment pipeline with the SDCI platform to achieve the infrastructure-as-code (IaC) principle. 
-- **Commitment-free** - In the past, one of the key factors in the order process was bandwidth commitment, which meant you had to pay for the bandwidth you did not completely consume. The charge model of each SDCI component is subscription-based as well as those CSPs and SaaS vendors; you would only need to pay for how many resources you actually consume. 
-- **Carrier-neutral** - Before Google announced its [Cross-Cloud Interconnect](https://cloud.google.com/blog/products/networking/announcing-google-cloud-cross-cloud-interconnect) offering, there was no way to bridge various clouds via a single cloud solution because each of them is proprietary. However, the SDCI framework crosses this boundary; it acts as an octopus that is capable of integrating every cloud with it simultaneously.
+On the other hand, each CSP encourages every customer to embrace more cloud-native services/features instead of building self-managed frameworks due to a variety of considerations, for instance, solution integrity, product familiarity, modernised architecture, or cost optimisation. If you still do not have a clear cloud blueprint then you will get stuck in the concern I raised previously eventually.
 
-Therefore, let us look at [Megaport](https://www.megaport.com/services/) who is one of the well-known SDCI solution providers in the market.
+# <span class="fontColorH2">*Cloud-native Is Not Really A Must-be!*</span>
 
-# <span class="fontColorH2">*Solutions Outline*</span>
+Is the cloud-native service architecture required? Although the feedback could be positive _(Yes, that is a milestone we aim to achieve!)_ or negative _(Well...that is a goal certainly, but it depends on if we are eager to revamp our service framework...)_, <u>we should deem the whole process as an evolution instead of enforcement</u>. We do not have the Infinity Gauntlet, giving us the power to rewrite anything immediately by snapping our fingers... We shall classify which service architecture will stay unchanged and which one will be revamped in practice. After classification, you will figure out that the most cost-effective manner for hosting those unchanged frameworks is the host-based platform, for instance, [Dedicated Hosts](https://aws.amazon.com/ec2/dedicated-hosts/) or [VMware Cloud](https://www.vmware.com/cloud-solutions/cloud-infrastructure.html), and here are the reasons.
 
-Leveraging either the CSP-managed VPN service or the 3^rd^ party firewall instance-based VPN to bridge the clouds is not really a concern if you do not have too many sites; however, it would be tedious and overwhelming once you have tons of environments that need to be managed. In the era of everything seeking out efficiency and as-code gives Megaport an opportunity to demonstrate its capability which is composed of three key offerings: **Port**, **MCR**, and **MVE**.
+- **Optimise your license fee** - Let me use the Microsoft SQL Server as an example for elaboration. There are two purchasing models: <u>per-vCPU and per-core</u>, and the adoption depends on how many SQL Servers you have. Here is a high-level guidance: If you are able to fully allocate your SQL Servers in a single host then you shall adopt the per-core model that makes your license fee lower. In contrast, if a host could not be fully allocated then you shall compare which purchasing model is more suitable because it does not mean that the per-vCPU model is more expensive.
 
-## <span class="fontColorH3">*Hybrid Cloud*</span>
+![License Optimisation](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4doipqruin750ydrymkr.png)
 
-<u>[Port](https://www.megaport.com/services/cloud-connectivity/) is delivered as a physical circuit that is capable of linking multiple clouds.</u> As a matter of fact, this offering is quite common, especially from the NSP's aspect, e.g. [PCCW](https://www.consoleconnect.com/services/layer-2/), [Equinix](https://www.equinix.com/products/digital-infrastructure-services/equinix-fabric), hence I do not want to dig it too much detailed.
+- **Remain operational consistency (VMware Cloud)** - Most organisations get started on their virtualisation journey with VMware vSphere suites, including vCenter (management console), vSAN (storage), and NSX (networking and network security). These components are also VMware Cloud fundamentals across AWS, Azure, Google, and other CSP platforms. Besides the optimisation of the license fee, if the customer not only aims to keep their service frameworks unchanged but also retains their operation excellences as much as possible, then the VMware Cloud will be the most ideal choice.
+- **Gain more capacity (VMware Cloud)** - Why VMware is so powerful? <u>Because of the over-provisioning principle!</u> What is it? That is to say, you are able to allocate compute resources (vCPU, memory, and storage) more than a single host has. How come!? In fact, every resource you allocate to every single workload does not mean that it will be fully utilised; you could see the real usage is lower than 50% or even more in most cases. What VMware does is <u>dynamically reallocate these idle resources to anyone who really needs them</u>, ensuring that every resource a single host has could be completely used. Let me use the _r5_ Dedicated Host as an example for elaboration, it is able to load 24x _r5.xlarge_ instances; in other words, it could afford much more than just 24x _r5.xlarge_ instances based on the VMware technology.
 
-![Port](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sqxz9i2snalzwolytcn8.png)
+You could also refer to my post [Migrate On-premises Workloads To AWS](https://bit.ly/migrate-onpremises-workloads-to-aws#VMware-Cloud-on-AWS) that introduces the VMware Cloud on AWS architecture in depth.
 
-## <span class="fontColorH3">*Cloud-to-Cloud*</span>
+# <span class="fontColorH2">*Slow Down Your Pace*</span>
 
-<u>[MCR (Megaport Cloud Router)](https://www.megaport.com/services/megaport-cloud-router/) functions as a concentrated exchange point that is capable of managing the routing across multiple clouds.</u> Unlike Port adopts the layer-2 design to bridge the on-premises with the clouds (the routing relies on the network infrastructure in on-premises), MCR adopts the layer-3 design for every cloud-to-cloud scenario (the routing is totally handled by itself); for this reason, you could construct a hub-spoke transport architecture on either per-region, per-cloud, or even both basis.
+Essentially, the cloud itself is a journey of transformation; it could be an evolution _(It is the right time to get rid of legacy architectures)_ or even a revolution _(Why do we have to change?)_. As I mentioned earlier, nothing could be revamped just by snapping our fingers simply. Every intention has a background, in order to carry out our intentions, we must have a blueprint _(How will we get there?)_, define checkpoints _(Are we on track?)_, review the whole progress _(Does anything we missed?)_, etc. If you look at this journey carefully, you will be aware that this framework is not a single cycle, instead, it takes place over and over again because how frequently each feature, service, or even partnership will be published in the cloud world is faster than your imagination; that is a reason why you shall always keep your mindset in the Day-1 state.
 
-![MCR](https://docs.megaport.com/mcr/img/multicloud.png)
-
-Let us slow down our pace for a while. You are probably aware of one single term - **VXC (Virtual Cross Connect)** because it is associated with both Port and MCR. Actually, VXC is what we are looking for the leased line in the cloud world. <u>Each VXC represents a connector of the destination</u>, e.g. Amazon, Microsoft, or Google. In addition, each VXC could not function without associating with Megaport's services; otherwise, it is just an object.
-
-![MCCA via Megaport](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1lghtty0pzbo24un93gg.png)
-
-You are probably curious about how could each VXC be deemed a leased line? The answer is quite straightforward because every single VXC behind the scenes is a CSP-managed interconnect resource, e.g. AWS Direct Connect, Azure ExpressRoute, or GCP Cloud Interconnect. The only discrepancy is that you are not responsible for operating any network infrastructure in on-premises, Megaport takes over this ownership.
-
-### <span class="fontColorH4">*Technical Deep-dive*</span>
-
-I observed one thing that is worth keeping in mind during the PoC is how BGP Prefix Filter works on MCR because it functions differently when compared with how BGP behaves in general.
-
-![BGP Prefix Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/mp4iim1ni6a2dfxprt5b.png)
-
-Import Prefix Filter does not mean which prefix is received from your BGP peer is allowed to feed into your route table, instead, <u>it means which CIDR of the VPC/VNet is associated with this BGP connection</u>. As you see from my PoC architecture, there are two CIDRs (_10.150.16.0/20_, _10.150.224.0/20_) from my AWS account. From MCR's aspect, those two prefixes must be allowed to import, otherwise, you will not see any prefix in the Received section.
-
-![PoC](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qv2w40onas9riiiewbvg.png)
-
-![Import Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/lcgvl4h06pqumektzd95.png)
-
-Export Prefix Filter does not mean which origin prefix you want to advertise to your BGP peer, instead, <u>it means which prefix you receive from your BGP peer is allowed to propagate; in other words, which prefix is able to transit over this BGP connection</u>. Looking at my PoC architecture again, there is a single CIDR (_10.160.224.0/20_) from my Azure account. From MCR's aspect, this prefix must be allowed to export, otherwise, you will not see any prefix in the Advertised section; in other words, you will not any prefix in your VPC/VNet Route Table, either.
-
-![Export Filter](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/o01cl5myk8r4gr091ofn.png)
-
-## <span class="fontColorH3">*Enhanced SD-WAN*</span>
-
-[MVE (Megaport Virtual Edge)](https://www.megaport.com/services/megaport-virtual-edge/) is based on the SD-WAN foundation to provide an optimised path between the on-premises and the CSP/SaaS platforms; in other words, MVE has a prerequisite of [supported vendor platforms](https://docs.megaport.com/mve/).
-
-![MVE](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yj8248wkwk895mqb4nnk.png)
-
-You may wonder why Megaport is able to optimise the network path for SaaS platforms via MVE? The answer is composed of two pieces: 
-
-- First of all, the Megaport-managed network backbone, which is close to the colocations/datacentres where those CSPs locate. This factor is a prerequisite for most SD-WAN solution providers in the market under the hood.
-- Secondly, a comprehensive ecosystem from Megaport Marketplace, the most decisive factor from my perspective. Every certified service provider could be represented by a VXC and associated with MVE.
-
-Apparently, since everything is under Megaport's umbrella, the user experience could be eminently optimised.
-
-# <span class="fontColorH2">*Wrap-up*</span>
-
-One of the reasons why Megaport's offerings are fascinating is its highly elastic design from my perspective. Each service on the bottom could be represented by a VXC and each VXC could be associated with either Port, MCR, or MVE. Imagine that we are in the Lego world, every tier (VXC, Port, MCR, and MVE) could be deemed the Lego blocks, and what those blocks will present that depending on your imagination (requirement).
-
-![VXC Types](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4t4fkwwh55ymhujf0iak.png)
-
-Although one of the transitions in the cloud era is <u>the Internet is a new network</u>, when we take either the business drivers (e.g. SLA) or the operational concerns (e.g. security) into account, the SDCI solutions are worth evaluating and embracing for your modernised service framework nonetheless.
+To slow down does not mean pausing everything, instead, it gives you a space to verify what is the goal you aim to fulfil and do you align with it.
 
 :::info
-:date: Published on 6^th^ September 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
+:date: Published on 8^th^ December 2023. This post is also published in my [dev.to](https://dev.to/@terrencec51229) space.
 :::
 
 :::warning
